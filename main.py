@@ -60,10 +60,6 @@ for i, line in enumerate(scraperTextStripped):
     except:
         pass
 
-with open("output.json", "w") as file:
-    json.dump(output, file, indent=4)
+with open("output.json", "w", encoding='utf-8') as file:
+    json.dump(output, file, indent=4, ensure_ascii=False)
 
-
-
-
-"A: Ghost hunting B: Duck huntingC: Bargain hunting D: Corporate headhunting"
