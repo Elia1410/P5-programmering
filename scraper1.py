@@ -170,7 +170,25 @@ links= [
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=56188',
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=56140',
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=56139',
-    'https://www.wwtbambored.com/viewtopic.php?f=1&t=56068'
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=56068',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55537',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55523',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55466',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55458',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55445',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55444',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55414',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55392',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55385',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55295',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55292',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55291',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55274',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55273',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55234',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55211',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55210',
+    'https://www.wwtbambored.com/viewtopic.php?f=1&t=55191'
 ]
 
 

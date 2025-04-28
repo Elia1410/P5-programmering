@@ -1,0 +1,47 @@
+{
+    "1": [
+        {
+            "question": "Manhattan gets its name from a Native American word meaning “island of many” what?",
+            "options": [
+                "Overpriced apartments",
+                "Actor/waiters",
+                "Money-laundering operations",
+                "Hills"
+            ],
+            "answer": 3
+        },
+        {
+            "question": "“Bring treats,” “Notify your photographer” and “Don’t overdo it” are three things TheKnot.com suggests when including whom in your engagement photo?",
+            "options": [
+                "Your landlord",
+                "Your dentist",
+                "Your dog",
+                "Your ex"
+            ],
+            "answer": 2
+        }
+    ],
+    "2": [
+        {
+            "question": "Bearing the surname of a wealthy soap magnate, what top-rated New York liberal arts college shares its name with a popular brand of toothpaste?",
+            "options": [
+                "Pepsodent University",
+                "Colgate University",
+                "Aquafresh University",
+                "Crest Complete Whitening Plus Scope Univ."
+            ],
+            "answer": 1
+        },
+        {
+            "question": "Though she overcame it in a famous 2001 performance at the MTV VMA’s, Britney Spears has a much publicized case of ophidiophobia, or fear of what?",
+            "options": [
+                "Woodpeckers",
+                "Snakes",
+                "Trout",
+                "Dairy cows"
+            ],
+            "answer": 1
+        }
+    ],
+    "3": []
+}
