@@ -74,33 +74,28 @@ def scrapeURL(url):
             print(f"failed 1 question from {url[-5:]}")
 
 
-URLsToScrape = 700
+URLsToScrape = 4000
 
 URLs = []
 
 
-for i in range(URLsToScrape):
+for i in range(0, URLsToScrape, 50):
     try:
-        mainPage = requests.get(f'https://www.wwtbambored.com/viewforum.php?f=3&start={i+1}')
+        mainPage = requests.get(f'https://www.wwtbambored.com/viewforum.php?f=3&start={i}')
         scraper = bs(mainPage.text, "html.parser")
-        scraperText = scraper.prettify().split("\n")
-        scraperTextStripped = [line.strip() for line in scraperText]
+        scraperText = scraper.prettify()
 
         transcriptPageURL = "https://www.wwtbambored.com/viewtopic.php?f=1&t="
 
-        for n, line in enumerate(scraperTextStripped):
-            if 'row bg2' in line:
-                URLLine = scraperTextStripped[n+4]
-                tIndex = URLLine.index("t=")
-                transcriptPageURL += URLLine[tIndex+2:tIndex+7]
-                break
-
-        URLs.append(transcriptPageURL)
-        print(f"{i+1}/{URLsToScrape} url gathered")
+        for i in range(len(scraperText)):
+            if scraperText[i] + scraperText[i+1] == "t=":
+                transcriptIndex = scraperText[i+2:i+7]
+                URLs.append(transcriptPageURL + transcriptIndex)
     except:
-        print("URL failed")
+        pass
 
-with ThreadPoolExecutor(max_workers=50) as executor:
+URLs = list(set(URLs))
+with ThreadPoolExecutor(max_workers=75) as executor:
     executor.map(scrapeURL, URLs)
 
 
@@ -110,5 +105,22 @@ output = {
     "3": level3Questions
 }
 
+print("\nQuestions gathered:")
+print(f"\ttotal: {len(output['1']) + len(output['2']) + len(output['3'])}")
+print(f"\tlevel 1: {len(output['1'])}")
+print(f"\tlevel 2: {len(output['2'])}")
+print(f"\tlevel 3: {len(output['3'])}")
+
+
 with open("output2.json", "w", encoding='utf-8') as file:
     json.dump(output, file, indent=4, ensure_ascii=False)
+
+
+"""
+Questions gathered:
+        total: 2564
+        level 1: 873
+        level 2: 1593
+        level 3: 98
+"""
+
