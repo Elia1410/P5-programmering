@@ -1,0 +1,60 @@
+import json
+from random import randint
+
+class Game:
+    def __init__(self):
+        self.__level = 0
+        self.__previousQuestions = [[], [], []]
+        
+        with open("output2.json", "r", encoding="utf8") as file:
+            self.__questionData = json.load(file)
+
+        self.__currentQuestion = self.__newQuestion()
+
+    def getLevel(self):
+        return self.__level
+    
+    def nextLevel(self):
+        if self.__level < 14:
+            self.__level += 1
+        self.__currentQuestion = self.__newQuestion()
+    
+    def __newQuestion(self):
+        qLevel = int(self.getLevel()/5)
+        while True:
+            qIndex = randint(0, len(self.__questionData[str(qLevel+1)])-1)
+            if not qIndex in self.__previousQuestions[qLevel]:
+                self.__previousQuestions[qLevel].append(qIndex)
+                break
+        return self.__questionData[str(qLevel+1)][qIndex]
+    
+    def getQuestion(self):
+        return self.__currentQuestion
+    
+    def gameOver(self):
+        self.__level = 0
+        self.__currentQuestion = self.__newQuestion()
+
+if __name__ == "__main__":
+    game = Game()
+    while True:
+        question = game.getQuestion()["question"]
+        options = game.getQuestion()["options"]
+        level = game.getLevel()
+
+        print(f"level: {level+1}: {question}\n")
+        print(f"(1) {options[0]}")
+        print(f"(2) {options[1]}")
+        print(f"(3) {options[2]}")
+        print(f"(4) {options[3]}\n")
+
+        guess = int(input("(1-4): "))
+
+        if game.getQuestion()["answer"] == guess-1:
+            print("CORRECT!!!\n")
+            game.nextLevel()
+        else:
+            print("INCORRECT!!!\n")
+            game.gameOver()
+
+        
