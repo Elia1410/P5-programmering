@@ -33,6 +33,7 @@ class Game:
     
     def gameOver(self):
         self.__level == 0
+        self.__currentQuestion = self.__newQuestion()
 
 if __name__ == "__main__":
     game = Game()
