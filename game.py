@@ -32,7 +32,7 @@ class Game:
         return self.__currentQuestion
     
     def gameOver(self):
-        self.__level == 0
+        self.__level = 0
         self.__currentQuestion = self.__newQuestion()
 
 if __name__ == "__main__":
@@ -40,8 +40,9 @@ if __name__ == "__main__":
     while True:
         question = game.getQuestion()["question"]
         options = game.getQuestion()["options"]
+        level = game.getLevel()
 
-        print(f"level: {game.getLevel()+1}: {question}\n")
+        print(f"level: {level+1}: {question}\n")
         print(f"(1) {options[0]}")
         print(f"(2) {options[1]}")
         print(f"(3) {options[2]}")
