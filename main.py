@@ -11,7 +11,7 @@ centerY = screen.get_height()/2
 pygame.display.set_caption("WWTBAM")
 
 class MyButton: #new button temp
-    def __init__(self, surface, width, height, x, y, func:function):
+    def __init__(self, surface, width, height, x, y, func):
         self.win = surface
         self.width = width
         self.height = height
@@ -30,8 +30,8 @@ class MyButton: #new button temp
     def checkPressed(self):
         if self.checkHover():
             pygame.event.get()
-            if pygame.mouse.get_pressed()[0]:
-                print("hello")
+            if pygame.mouse.get_just_released()[0]:
+               self.func()
 
 
 #Question box
@@ -45,7 +45,7 @@ anwserD = Button(screen, 635, 660, 0, 0, text="It’s pregnant", textColour="whi
     #new button temp
 def testFunc():
     print("test")
-buttonTest = MyButton(screen, 100, 100, 0, 0, testFunc())
+buttonTest = MyButton(screen, 100, 100, 0, 0, testFunc)
 
 #text blit
     #level indicator
