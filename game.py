@@ -42,12 +42,12 @@ if __name__ == "__main__":
         options = game.getQuestion()["options"]
         level = game.getLevel()
 
-        print(f"level: {level+1}: {question}\n")
+        print(f"level {level+1}: {question}\n")
         print(f"(1) {options[0]}")
         print(f"(2) {options[1]}")
         print(f"(3) {options[2]}")
         print(f"(4) {options[3]}\n")
-
+        
         guess = int(input("(1-4): "))
 
         if game.getQuestion()["answer"] == guess-1:
