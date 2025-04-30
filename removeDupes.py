@@ -46,3 +46,4 @@ outputNoDupes = {
 
 with open("output2.json", "w", encoding='utf-8') as file:
     json.dump(outputNoDupes, file, indent=4, ensure_ascii=False)
+
