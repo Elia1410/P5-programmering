@@ -35,6 +35,18 @@ class Game:
         self.__level = 0
         self.__currentQuestion = self.__newQuestion()
 
+    def LLaudience(self):
+        return [0.25, 0.25, 0.25, 0,25]
+
+    def LLaskHost(self):
+        return "bla bla bla"
+
+    def LL5050(self):
+        return [1, 2]
+
+    def LLcallFriend(self):
+        return "bla bla bla bla"
+
 if __name__ == "__main__":
     game = Game()
     while True:
@@ -53,7 +65,6 @@ if __name__ == "__main__":
             if guess.isdigit():
                 if int(guess) in range(1,5):
                     break
-            
 
         if game.getQuestion()["answer"] == int(guess)-1:
             print("CORRECT!!!\n")
@@ -61,4 +72,3 @@ if __name__ == "__main__":
         else:
             print("INCORRECT!!!\n")
             game.gameOver()
-            
