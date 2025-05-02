@@ -48,9 +48,14 @@ if __name__ == "__main__":
         print(f"(3) {options[2]}")
         print(f"(4) {options[3]}\n")
         
-        guess = int(input("(1-4): "))
+        while True:
+            guess = input("(1-4): ")
+            if guess.isdigit():
+                if int(guess) in range(1,5):
+                    break
+            
 
-        if game.getQuestion()["answer"] == guess-1:
+        if game.getQuestion()["answer"] == int(guess)-1:
             print("CORRECT!!!\n")
             game.nextLevel()
         else:
