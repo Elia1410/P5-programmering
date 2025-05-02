@@ -10,9 +10,8 @@ centerX = screen.get_width()/2
 centerY = screen.get_height()/2
 pygame.display.set_caption("WWTBAM")
 
-class MyButton: #new button temp
-    def __init__(self, surface, width, height, x, y, func):
-        self.win = surface
+class NewButton: #new button temp
+    def __init__(self, width, height, x, y, func):
         self.width = width
         self.height = height
         self.destX = x
@@ -22,7 +21,7 @@ class MyButton: #new button temp
 
     def checkHover(self):
         isHoverX = pygame.mouse.get_pos()[0] in list(range(self.destX, self.destX+self.width))
-        isHoverY = pygame.mouse.get_pos()[0] in list(range(self.destY, self.destY+self.height))
+        isHoverY = pygame.mouse.get_pos()[1] in list(range(self.destY, self.destY+self.height))
         if isHoverX & isHoverY:
             self.isHover = True
             return self.isHover
@@ -33,19 +32,29 @@ class MyButton: #new button temp
             if pygame.mouse.get_just_released()[0]:
                self.func()
 
+    def drawEdges(self):
+        pygame.draw.line(screen, "yellow", (self.destX, self.destY), (self.destX+self.width, self.destY+self.height), 3)
+        pygame.draw.line(screen, "yellow", (self.destX, self.destY+self.height), (self.destX+self.width, self.destY), 3)
+
 
 #Question box
 question = Button(screen, 450, 532, 0, 0, text="What makes the moon “glow”?", textColour="white", textHAlign=center)
 
-#Anwser buttons
-anwserA = Button(screen, 270, 610, 0, 0, text="It’s wrapped in Christmas lights", textColour="white")
-anwserB = Button(screen, 635, 610, 0, 0, text="It’s filled with fireflies", textColour="white")
-anwserC = Button(screen, 270, 660, 0, 0, text="It’s reflecting light from the sun", textColour="white")
-anwserD = Button(screen, 635, 660, 0, 0, text="It’s pregnant", textColour="white")
-    #new button temp
-def testFunc():
-    print("test")
-buttonTest = MyButton(screen, 100, 100, 0, 0, testFunc)
+#Anwser buttons 
+def selectedA():
+    print("A Pressed")
+def selectedB():
+    print("B Pressed")
+def selectedC():
+    print("C Pressed")
+def selectedD():
+    print("D Pressed")
+anwserA = NewButton(433-93, 632-593, 93, 593, selectedA)
+answerC = NewButton(433-93, 682-643, 93, 643, selectedC)
+anwserB = NewButton(800-460, 632-593, 460, 593, selectedB)
+answerD = NewButton(800-460, 682-643, 460, 643, selectedD)
+answerButtons = [anwserA, anwserB, answerC, answerD]
+
 
 #text blit
     #level indicator
@@ -66,16 +75,13 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("14  $ 500.000", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
 
-#image and rects
+#image related
 bgImg = pygame.image.load("pngs/background.png").convert()
 correctAnwser = pygame.image.load("pngs/correct.png").convert_alpha()
 correctAnwser.set_alpha(128)
 selectedAnwser = pygame.image.load("pngs/selected.png").convert_alpha()
 selectedAnwser.set_alpha(128)
-destA = (95, 592)
-destC = (95, 642)
-destB = (460, 592)
-destD = (460, 642)
+destA, destB, destC, destD = (95, 592), (460, 592), (95, 642), (460, 642)
 
 running = True
 while running == True:
@@ -91,8 +97,13 @@ while running == True:
     #blit levels
     for i,level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
+
+    for button in answerButtons:
+        button.drawEdges()
+        button.checkPressed()
     
-    buttonTest.checkPressed()
+
+
 
     pygame_widgets.update(events) 
     pygame.display.update()
