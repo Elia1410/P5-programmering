@@ -59,12 +59,10 @@ destA, destB, destC, destD = (93, 592), (460, 592), (93, 642), (460, 642)
 destinations = [destA, destB, destC, destD]
 
     #lifeline buttons
-usedLL = pg.image.load("pngs/LLused.png").convert_alpha()
+usedLL = pg.transform.scale(pg.image.load("pngs/LLused.png"), (85, 52)).convert_alpha()
 usedLL.set_alpha(80)
 hoverLL = pg.transform.scale(pg.image.load("pngs/LLselected.png"), (85, 52)).convert_alpha()
 hoverLL.set_alpha(50)
-selectedLL = pg.image.load("pngs/LLselected.png").convert_alpha()
-selectedLL.set_alpha(100)
 destAskAudience, destAskHost, dest5050, destCallFriend = (30, 30), (30, 100), (30, 170), (30, 240)
 destinationsLL = [destAskAudience, destAskHost, dest5050, destCallFriend]
 
@@ -90,17 +88,28 @@ def selectedD():
     print("D Pressed")
     selectedStates[3] = True
 anwserBtnA = NewButton(433-93,  632-593, destA[0], destA[1], selectedA, hoverAnwser)
-anwserBtnC = NewButton(433-93,  682-643, destB[0], destB[1], selectedC, hoverAnwser)
-anwserBtnB = NewButton(800-460, 632-593, destC[0], destC[1], selectedB, hoverAnwser)
+anwserBtnC = NewButton(433-93,  682-643, destC[0], destC[1], selectedC, hoverAnwser)
+anwserBtnB = NewButton(800-460, 632-593, destB[0], destB[1], selectedB, hoverAnwser)
 anwserBtnD = NewButton(800-460, 682-643, destD[0], destD[1], selectedD, hoverAnwser)
 
     #lifelines
-def someFunc():
-    pass
-LLaskAudienceBtn = NewButton(85, 52, destAskAudience[0], destAskAudience[1], someFunc, hoverLL)
-LLaskHostBtn     = NewButton(85, 52, destAskHost[0],     destAskHost[1],     someFunc, hoverLL)
-LL5050Btn        = NewButton(85, 52, dest5050[0],        dest5050[1],        someFunc, hoverLL)
-LLcallFriendBtn  = NewButton(85, 52, destCallFriend[0],  destCallFriend[1],  someFunc, hoverLL)
+def usedAskAudience():
+    print("AA pressed")
+    selectedStatesLL[0] = True
+def usedAskHost():
+    print("AH pressed")
+    selectedStatesLL[1] = True
+def used5050():
+    print("5050 Pressed")
+    selectedStatesLL[2] = True
+def usedCallFriend():
+    print("CF used")
+    selectedStatesLL[3] = True
+
+LLaskAudienceBtn = NewButton(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, hoverLL)
+LLaskHostBtn     = NewButton(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     hoverLL)
+LL5050Btn        = NewButton(85, 52, dest5050[0],        dest5050[1],        used5050,        hoverLL)
+LLcallFriendBtn  = NewButton(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  hoverLL)
 
 
 
@@ -119,7 +128,7 @@ def showStates():
 
     for i, state in enumerate(selectedStatesLL):
         if state == True:
-            screen.blit(selectedLL, destinationsLL[i])
+            screen.blit(usedLL, destinationsLL[i])
 
 
 #lists
