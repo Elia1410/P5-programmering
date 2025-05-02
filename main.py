@@ -1,64 +1,135 @@
-import pygame
+import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
 
-pygame.init()
+pg.init()
 
-screen = pygame.display.set_mode((900,700))
+screen = pg.display.set_mode((900,700))
 center = (screen.get_width()/2, screen.get_height()/2)
 centerX = screen.get_width()/2 
 centerY = screen.get_height()/2
-pygame.display.set_caption("WWTBAM")
+pg.display.set_caption("WWTBAM")
 
 class NewButton: #new button temp
-    def __init__(self, width, height, x, y, func):
+    def __init__(self, width, height, posX, posY, func, hoverImage):
         self.width = width
         self.height = height
-        self.destX = x
-        self.destY = y
+        self.posX = posX
+        self.posY = posY
         self.isHover = False
         self.func = func
+        self.hoverImage = hoverImage
 
     def checkHover(self):
-        isHoverX = pygame.mouse.get_pos()[0] in list(range(self.destX, self.destX+self.width))
-        isHoverY = pygame.mouse.get_pos()[1] in list(range(self.destY, self.destY+self.height))
-        if isHoverX & isHoverY:
+        isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
+        isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
+        if isHoverX == True & isHoverY == True:
             self.isHover = True
+            screen.blit(self.hoverImage, (self.posX, self.posY))
             return self.isHover
 
     def checkPressed(self):
         if self.checkHover():
-            pygame.event.get()
-            if pygame.mouse.get_just_released()[0]:
+            pg.event.get()
+            if pg.mouse.get_just_released()[0]:
                self.func()
 
     def drawEdges(self):
-        pygame.draw.line(screen, "yellow", (self.destX, self.destY), (self.destX+self.width, self.destY+self.height), 3)
-        pygame.draw.line(screen, "yellow", (self.destX, self.destY+self.height), (self.destX+self.width, self.destY), 3)
+        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)
+        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)
+
+#image related
+bgImg = pg.image.load("pngs/background.png").convert()
+askAudience = pg.transform.scale(pg.image.load("pngs/askaudience.png"), (85, 52)).convert()
+askHost = pg.transform.scale(pg.image.load("pngs/askhost.png"), (85, 52)).convert()
+fiftyFifty = pg.transform.scale(pg.image.load("pngs/5050.png"), (85, 52)).convert()
+callFriend = pg.transform.scale(pg.image.load("pngs/call.png"), (85, 52)).convert()
+
+
+    #anwser buttons
+correctAnwser = pg.image.load("pngs/correct.png").convert_alpha()
+correctAnwser.set_alpha(100)
+selectedAnwser = pg.image.load("pngs/selected.png").convert_alpha()
+selectedAnwser.set_alpha(100)
+hoverAnwser = pg.image.load("pngs/selected.png").convert_alpha()
+hoverAnwser.set_alpha(35)
+disabledAnwser = pg.image.load("pngs/unavailable.png").convert_alpha()
+disabledAnwser.set_alpha(80)
+destA, destB, destC, destD = (93, 592), (460, 592), (93, 642), (460, 642)
+destinations = [destA, destB, destC, destD]
+
+    #lifeline buttons
+usedLL = pg.image.load("pngs/LLused.png").convert_alpha()
+usedLL.set_alpha(80)
+hoverLL = pg.transform.scale(pg.image.load("pngs/LLselected.png"), (85, 52)).convert_alpha()
+hoverLL.set_alpha(50)
+selectedLL = pg.image.load("pngs/LLselected.png").convert_alpha()
+selectedLL.set_alpha(100)
+destAskAudience, destAskHost, dest5050, destCallFriend = (30, 30), (30, 100), (30, 170), (30, 240)
+destinationsLL = [destAskAudience, destAskHost, dest5050, destCallFriend]
+
+    #popup
+popUp = pg.image.load("pngs/pop up image.png").convert()
 
 
 #Question box
 question = Button(screen, 450, 532, 0, 0, text="What makes the moon “glow”?", textColour="white", textHAlign=center)
 
-#Anwser buttons 
+#buttons
+    #anwser buttons 
 def selectedA():
     print("A Pressed")
+    selectedStates[0] = True
 def selectedB():
     print("B Pressed")
+    selectedStates[1] = True
 def selectedC():
     print("C Pressed")
+    selectedStates[2] = True
 def selectedD():
     print("D Pressed")
-anwserA = NewButton(433-93, 632-593, 93, 593, selectedA)
-answerC = NewButton(433-93, 682-643, 93, 643, selectedC)
-anwserB = NewButton(800-460, 632-593, 460, 593, selectedB)
-answerD = NewButton(800-460, 682-643, 460, 643, selectedD)
-answerButtons = [anwserA, anwserB, answerC, answerD]
+    selectedStates[3] = True
+anwserBtnA = NewButton(433-93,  632-593, destA[0], destA[1], selectedA, hoverAnwser)
+anwserBtnC = NewButton(433-93,  682-643, destB[0], destB[1], selectedC, hoverAnwser)
+anwserBtnB = NewButton(800-460, 632-593, destC[0], destC[1], selectedB, hoverAnwser)
+anwserBtnD = NewButton(800-460, 682-643, destD[0], destD[1], selectedD, hoverAnwser)
+
+    #lifelines
+def someFunc():
+    pass
+LLaskAudienceBtn = NewButton(85, 52, destAskAudience[0], destAskAudience[1], someFunc, hoverLL)
+LLaskHostBtn     = NewButton(85, 52, destAskHost[0],     destAskHost[1],     someFunc, hoverLL)
+LL5050Btn        = NewButton(85, 52, dest5050[0],        dest5050[1],        someFunc, hoverLL)
+LLcallFriendBtn  = NewButton(85, 52, destCallFriend[0],  destCallFriend[1],  someFunc, hoverLL)
+
+
+
+#state variables for buttons
+    #anwsers
+selectedStates = [False, False, False, False]
+correctStates = [False, False, False, False]
+    #lifelines
+selectedStatesLL = [False, False, False, False]
+usedStatesLL = [False, False, False, False]
+
+def showStates():
+    for i, state in enumerate(selectedStates):
+        if state == True:
+            screen.blit(selectedAnwser, destinations[i])
+
+    for i, state in enumerate(selectedStatesLL):
+        if state == True:
+            screen.blit(selectedLL, destinationsLL[i])
+
+
+#lists
+images = [(bgImg,(0,0)), (askAudience, destAskAudience), (askHost, destAskHost), (fiftyFifty, dest5050), (callFriend, destCallFriend)]
+buttons = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn]
 
 
 #text blit
     #level indicator
-FONT1 = pygame.font.Font("ARIAL.TTF", size=20)
+FONT1 = pg.font.Font("ARIAL.TTF", size=20)
 levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("2   $ 200", True, "orange"),
         FONT1.render("3   $ 300", True, "orange"),
@@ -75,35 +146,26 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("14  $ 500.000", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
 
-#image related
-bgImg = pygame.image.load("pngs/background.png").convert()
-correctAnwser = pygame.image.load("pngs/correct.png").convert_alpha()
-correctAnwser.set_alpha(128)
-selectedAnwser = pygame.image.load("pngs/selected.png").convert_alpha()
-selectedAnwser.set_alpha(128)
-destA, destB, destC, destD = (95, 592), (460, 592), (95, 642), (460, 642)
 
 running = True
 while running == True:
-    events = pygame.event.get()
+    events = pg.event.get()
     for event in events:
-        if event.type == pygame.QUIT:  
+        if event.type == pg.QUIT:  
             running = False
 
     screen.fill((255,255,255))
-    #draw background
-    screen.blit(bgImg,(0,0))
-    screen.blit(correctAnwser, destA)
+    #blit background and lifelines
+    for i in images:
+        screen.blit(i[0], i[1])
     #blit levels
-    for i,level in enumerate(levels):
+    for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
 
-    for button in answerButtons:
-        button.drawEdges()
+    for button in buttons:
         button.checkPressed()
-    
 
-
+    showStates()
 
     pygame_widgets.update(events) 
-    pygame.display.update()
+    pg.display.update()
