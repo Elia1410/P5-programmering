@@ -35,7 +35,36 @@ class Game:
         self.__level = 0
         self.__currentQuestion = self.__newQuestion()
 
+    def LLaudience(self):
+        correctIndex = self.getQuestion()["answer"]
+        currLevel = self.getLevel()
+        correctAnswerProb = (15-currLevel)*2
+        remainingProb = 100-correctAnswerProb
+
+        probabilities = [0, 0, 0, 0]
+        probabilities[correctIndex] += correctAnswerProb
+
+        for i in range(remainingProb):
+            probabilities[randint(0,3)] += 1
+        
+        return probabilities
+
+    def LLaskHost(self):
+        return "bla bla bla"
+
+    def LL5050(self):
+        return [1, 2]
+
+    def LLcallFriend(self):
+        return "bla bla bla bla"
+
 if __name__ == "__main__":
+    game = Game()
+    for i in range(15):
+        print(f"{game.LLaudience()} on level {game.getLevel()} with answer {game.getQuestion()["answer"]}")
+        game.nextLevel()
+
+    """
     game = Game()
     while True:
         question = game.getQuestion()["question"]
@@ -53,7 +82,6 @@ if __name__ == "__main__":
             if guess.isdigit():
                 if int(guess) in range(1,5):
                     break
-            
 
         if game.getQuestion()["answer"] == int(guess)-1:
             print("CORRECT!!!\n")
@@ -61,4 +89,4 @@ if __name__ == "__main__":
         else:
             print("INCORRECT!!!\n")
             game.gameOver()
-            
+    """
