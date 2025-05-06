@@ -267,11 +267,15 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
 
 # spillogik
 game = Game()
+suspenseCooldown = 0
+revealCooldown = 0
+cooldownDelta = FPS*5
+guessWasCorrect = False
 
 # lydsystem
 sound = Sound()
 sound.playMainMusic()
-volume = 0
+volume = 1
 volumeDelta = 0.02
 targetVolume = 0.25
 
@@ -308,44 +312,53 @@ while running == True:
     elif volume > targetVolume:
         volume = max(volume-volumeDelta, targetVolume)
 
-    if sum(selectedStates):
+    if sum(selectedStates) and suspenseCooldown + revealCooldown == 0:
         if game.getQuestion()["options"][selectedStates.index(True)] != "":
             drawStates()
             pg.display.update()
             sound.playSuspenseMusic()
-            sleep(5)
-            sound.pauseMusic()
-
-            if selectedStates[game.getQuestion()["answer"]]:
-                correctStates = selectedStates.copy()
-                selectedStates = [False]*4
-                sound.playSoundCorrect()
-                game.nextLevel()
-            else:
-                correctStates[game.getQuestion()["answer"]] = True
-                sound.playSoundWrong()
-                game.gameOver()
-                selectedStatesLL = [False]*4
-            
-            drawStates()
-            pg.display.update()
-            sleep(5)
-            correctStates = [False]*4
-            selectedStates = [False]*4
-            sound.playMainMusic()
-            targetVolume = 0.25
-            ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
-            ttsThread.start()
+            suspenseCooldown = cooldownDelta
         else:
             selectedStates = [False]*4
     else:
         checkWidgets()
+        
+    if suspenseCooldown > 1:
+        suspenseCooldown -= 1
+    
+    if suspenseCooldown == 1:
+        suspenseCooldown -= 1
+        sound.pauseMusic()
+        if selectedStates[game.getQuestion()["answer"]]:
+            correctStates = selectedStates.copy()
+            selectedStates = [False]*4
+            sound.playSoundCorrect()
+            guessWasCorrect = True
+        else:
+            correctStates[game.getQuestion()["answer"]] = True
+            sound.playSoundWrong()
+            guessWasCorrect = False
+            selectedStatesLL = [False]*4
+        revealCooldown = cooldownDelta
+    
+    if revealCooldown > 1:
+        revealCooldown -= 1
+    
+    if revealCooldown == 1:
+        revealCooldown -= 1
 
-    try:
-        if not ttsThread.is_alive():
-            targetVolume = 1
-    except:
-        pass
+        if guessWasCorrect:
+            game.nextLevel()
+        else:
+            game.gameOver()
+
+        correctStates = [False]*4
+        selectedStates = [False]*4
+
+        sound.playMainMusic()
+        targetVolume = 0.25
+        ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
+        ttsThread.start()
 
     pygame_widgets.update(events) 
     pg.display.update()

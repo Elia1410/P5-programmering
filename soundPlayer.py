@@ -31,9 +31,8 @@ class Sound:
         self.engine = pyttsx3.init()
         voices = self.engine.getProperty('voices')
         self.engine.setProperty('voice', voices[0].id)
-        rate = self.engine.getProperty('rate')
         self.engine.setProperty('rate', 150)
-            
+
     def playSoundCorrect(self):
         self.effectCorrect.play()
 
@@ -66,6 +65,7 @@ class Sound:
 
     def setVolume(self, vol):
         self.volume = vol
+
         if self.currectTrack == self.mainTheme:
             pg.mixer.music.set_volume(vol*self.mainThemeVolume)
         else:
@@ -76,12 +76,13 @@ class Sound:
         self.effectWin.set_volume(vol*self.effectWinVolume)
 
     def tts(self, text):
-        try:
-            self.engine.endLoop()
-        except:
-            pass
-        self.engine.say(text)
-        self.engine.runAndWait()
+        if self.volume > 0:
+            try:
+                self.engine.stop()
+            except:
+                pass
+            self.engine.say(text)
+            self.engine.runAndWait()
         
 
 
