@@ -2,7 +2,11 @@ import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
 
+from time import sleep
+
 from game import Game
+
+from soundPlayer import Sound
 
 pg.init()
 
@@ -206,6 +210,10 @@ def drawStates():
         if state == True:
             screen.blit(selectedAnwser, destinations[i])
 
+    for i, state in enumerate(correctStates):
+        if state == True:
+            screen.blit(correctAnwser, destinations[i])
+
     for i, state in enumerate(selectedStatesLL):
         if state == True:
             screen.blit(usedLL, destinationsLL[i])
@@ -254,8 +262,10 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
 
 # spillogik
 game = Game()
-suspenseWait = FPS * 3
 
+# lydsystem
+sound = Sound()
+sound.playMainMusic()
 
 running = True
 while running == True:
@@ -265,6 +275,7 @@ while running == True:
             running = False
 
     screen.blit(bgImg, (0,0))
+    drawWidgets()
     drawStates()
     drawLevels()
 
@@ -277,8 +288,33 @@ while running == True:
     drawText(FONT0, options[2], 265, 663, False)
     drawText(FONT0, options[3], 635, 663, False)
 
+    drawText(FONT1, str(game.getLevel()+1), 448, 638, False)
+
+    sound.setVolume(soundTgl.state)
+
     if sum(selectedStates):
-        pass
+        sound.playSuspenseMusic()
+        sleep(5)
+        sound.pauseMusic()
+
+        if selectedStates[game.getQuestion()["answer"]]:
+            correctStates = selectedStates.copy()
+            selectedStates = [False, False, False, False]
+            sound.playSoundCorrect()
+            game.nextLevel()
+        else:
+            correctStates[game.getQuestion()["answer"]] = True
+            sound.playSoundWrong()
+            game.gameOver()
+        
+        drawStates()
+        pg.display.update()
+        sleep(5)
+        correctStates = [False, False, False, False]
+        selectedStates = [False, False, False, False]
+        sound.playMainMusic()
+    else:
+        checkWidgets()
 
 
     pygame_widgets.update(events) 

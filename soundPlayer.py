@@ -1,5 +1,4 @@
 import pygame as pg
-pg.init()
 
 import pyttsx3
 engine = pyttsx3.init()
@@ -19,6 +18,18 @@ class Sound:
         # musik:
         self.mainTheme = 'sounds/mainTheme.mp3'
         self.suspenseTheme = 'sounds/suspense.mp3'
+        self.currectTrack = None
+
+        # lydstyrke
+        self.mainThemeVolume = 0.1
+        self.suspenseThemeVolume = 0.8
+        self.effectCorrectVolume = 1
+        self.effectWrongVolume = 1
+        self.effectStartGameVolume = 1
+        self.effectWinVolume = 1
+
+        self.volume = 1
+        self.setVolume(self.volume)
     
     def playSoundCorrect(self):
         self.effectCorrect.play()
@@ -40,18 +51,26 @@ class Sound:
     
     def playMainMusic(self):
         pg.mixer.music.load(self.mainTheme)
+        pg.mixer.music.set_volume(self.volume*self.mainThemeVolume)
         pg.mixer.music.play(-1)
+        self.currectTrack = self.mainTheme
 
     def playSuspenseMusic(self):
         pg.mixer.music.load(self.suspenseTheme)
+        pg.mixer.music.set_volume(self.volume*self.suspenseThemeVolume)
         pg.mixer.music.play(-1)
+        self.currectTrack = self.suspenseTheme
 
     def setVolume(self, vol):
-        pg.mixer.music.set_volume(vol)
-        self.effectCorrect.set_volume(vol)
-        self.effectWrong.set_volume(vol)
-        self.effectStartGame.set_volume(vol)
-        self.effectWin.set_volume(vol)
+        self.volume = vol
+        if self.currectTrack == self.mainTheme:
+            pg.mixer.music.set_volume(vol*self.mainThemeVolume)
+        else:
+            pg.mixer.music.set_volume(vol*self.suspenseThemeVolume)
+        self.effectCorrect.set_volume(vol*self.effectCorrectVolume)
+        self.effectWrong.set_volume(vol*self.effectWrongVolume)
+        self.effectStartGame.set_volume(vol*self.effectStartGameVolume)
+        self.effectWin.set_volume(vol*self.effectWinVolume)
 
     def tts(self, text):
         engine.say(text)
@@ -59,6 +78,8 @@ class Sound:
 
 
 if __name__ == "__main__":
+
+    pg.init()
     screen = pg.display.set_mode((400, 400))
     soundsystem = Sound()
 
