@@ -275,8 +275,10 @@ sound.playMainMusic()
 volume = 0
 volumeDelta = 0.02
 targetVolume = 0.25
-ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],))
+
+ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
 ttsThread.start()
+
 
 running = True
 while running == True:
@@ -333,7 +335,7 @@ while running == True:
             selectedStates = [False]*4
             sound.playMainMusic()
             targetVolume = 0.25
-            ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],))
+            ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
             ttsThread.start()
         else:
             selectedStates = [False]*4
