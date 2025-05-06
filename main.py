@@ -239,8 +239,9 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
 
 def drawLevels():
-    #blit levels
+    #blit inidicator
     pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360-(game.getLevel()*25), 140, 24), width=0)
+    #blit levels
     for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
 
