@@ -179,8 +179,10 @@ def usedAskHost():
     print("AH pressed")
     selectedStatesLL[1] = True
 def used5050():
-    print("5050 Pressed")
-    selectedStatesLL[2] = True
+    if selectedStatesLL[2] == False:
+        print("5050 Pressed")
+        game.LL5050()
+        selectedStatesLL[2] = True
 def usedCallFriend():
     print("CF used")
     selectedStatesLL[3] = True
@@ -269,6 +271,7 @@ game = Game()
 sound = Sound()
 sound.playMainMusic()
 
+
 running = True
 while running == True:
     events = pg.event.get()
@@ -295,28 +298,37 @@ while running == True:
     sound.setVolume(soundTgl.state)
 
     if sum(selectedStates):
-        sound.playSuspenseMusic()
-        sleep(5)
-        sound.pauseMusic()
+        if game.getQuestion()["options"][selectedStates.index(True)] != "":
+            drawStates()
+            pg.display.update()
+            sound.playSuspenseMusic()
+            sleep(5)
+            sound.pauseMusic()
 
-        if selectedStates[game.getQuestion()["answer"]]:
-            correctStates = selectedStates.copy()
-            selectedStates = [False, False, False, False]
-            sound.playSoundCorrect()
-            game.nextLevel()
+            if selectedStates[game.getQuestion()["answer"]]:
+                correctStates = selectedStates.copy()
+                selectedStates = [False]*4
+                sound.playSoundCorrect()
+                game.nextLevel()
+            else:
+                correctStates[game.getQuestion()["answer"]] = True
+                sound.playSoundWrong()
+                game.gameOver()
+                selectedStatesLL = [False]*4
+            
+            drawStates()
+            pg.display.update()
+            sleep(5)
+            correctStates = [False]*4
+            selectedStates = [False]*4
+            sound.playMainMusic()
         else:
-            correctStates[game.getQuestion()["answer"]] = True
-            sound.playSoundWrong()
-            game.gameOver()
-        
-        drawStates()
-        pg.display.update()
-        sleep(5)
-        correctStates = [False, False, False, False]
-        selectedStates = [False, False, False, False]
-        sound.playMainMusic()
+            selectedStates = [False]*4
     else:
         checkWidgets()
+
+    # lifelines
+    
 
 
     pygame_widgets.update(events) 
