@@ -1,6 +1,12 @@
 import pygame as pg
 pg.init()
 
+import pyttsx3
+engine = pyttsx3.init()
+voices = engine.getProperty('voices')
+engine.setProperty('voice', voices[0].id)
+rate = engine.getProperty('rate')
+engine.setProperty('rate', 125)
 
 class Sound:
     def __init__(self):
@@ -47,6 +53,10 @@ class Sound:
         self.effectStartGame.set_volume(vol)
         self.effectWin.set_volume(vol)
 
+    def tts(self, text):
+        engine.say(text)
+        engine.runAndWait()
+
 
 if __name__ == "__main__":
     screen = pg.display.set_mode((400, 400))
@@ -78,5 +88,8 @@ if __name__ == "__main__":
             soundsystem.setVolume(0)
         if keys[pg.K_b]:
             soundsystem.setVolume(1)
+        if keys[pg.K_k]:
+            print("hello world")
+            soundsystem.tts("Australian researchers named two of their male palm cockatoos Ringo and Phil Collins after discovering that in order to impress females, the birds will do what?")
 
         
