@@ -38,7 +38,7 @@ class Widget: #superclass
 
 
 class Button(Widget): #subclass of Widget for buttons
-    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None):
+    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None,):
         super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
         self.buttonImage = widgetImage
 
@@ -47,8 +47,8 @@ class Button(Widget): #subclass of Widget for buttons
             screen.blit(self.buttonImage, (self.posX, self.posY))
 
     def checkHover(self):
-        isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
-        isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
+        isHoverX = pg.mouse.get_pos()[0] in list(range(int(self.posX), int(self.posX+self.width)))
+        isHoverY = pg.mouse.get_pos()[1] in list(range(int(self.posY), int(self.posY+self.height)))
         if isHoverX == True & isHoverY == True:
             self.isHover = True
             if self.hoverImage != None:
@@ -61,10 +61,10 @@ class Button(Widget): #subclass of Widget for buttons
             if pg.mouse.get_pressed()[0]:
                 if not self.justPressed:
                     self.func()
+
                     self.justPressed = True
             else: 
                 self.justPressed = False
-
         
 class Toggle(Widget): #subclass of Widget for toggles
     def __init__(self, width, height, posX, posY, state, widgetImages = None, hoverImages = None):
@@ -149,24 +149,29 @@ soundOnHover.set_alpha(80)
 soundOffHover = pg.transform.scale(pg.image.load("pngs/sound off hover.png"), (int(83*0.75), int(74*0.75))).convert_alpha()
 soundOffHover.set_alpha(80)
 
-    #popup
-popUp = pg.image.load("pngs/pop up image.png").convert()
+    #popup image
+popUp = pg.transform.scale(pg.image.load("pngs/pop up image.png"), (int(590*0.75), int(414*0.75))).convert_alpha()
+closeContinue = pg.transform.scale(pg.image.load("pngs/closePopUp.png"), (250, 45)).convert_alpha()
 
 
 #buttons
     #anwser buttons 
 def selectedA():
-    print("A Pressed")
-    selectedStates[0] = True
+    if gameStage == 0:
+        print("A Pressed")
+        selectedStates[0] = True
 def selectedB():
-    print("B Pressed")
-    selectedStates[1] = True
+    if gameStage == 0:
+        print("B Pressed")
+        selectedStates[1] = True
 def selectedC():
-    print("C Pressed")
-    selectedStates[2] = True
+    if gameStage == 0:
+        print("C Pressed")
+        selectedStates[2] = True
 def selectedD():
-    print("D Pressed")
-    selectedStates[3] = True
+    if gameStage == 0:
+        print("D Pressed")
+        selectedStates[3] = True
 
 anwserBtnA = Button(433-93,  632-593, destA[0], destA[1], selectedA, hoverImage=hoverAnwser)
 anwserBtnC = Button(433-93,  682-643, destC[0], destC[1], selectedC, hoverImage=hoverAnwser)
@@ -175,24 +180,41 @@ anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverImage=
 
     #lifelines
 def usedAskAudience():
-    print("AA pressed")
-    selectedStatesLL[0] = True
+    global popUpType, gameStage
+    if gameStage == 0 and selectedStatesLL[0] == False:
+        gameStage = 1
+        popUpType = "AA"
+        selectedStatesLL[0] = True
 def usedAskHost():
-    print("AH pressed")
-    selectedStatesLL[1] = True
+    global popUpType, gameStage
+    if gameStage == 0 and selectedStatesLL[1] == False:
+        gameStage = 1
+        popUpType = "AH"
+        selectedStatesLL[1] = True
 def used5050():
-    if selectedStatesLL[2] == False:
-        print("5050 Pressed")
-        game.LL5050()
-        selectedStatesLL[2] = True
+    if gameStage == 0:
+        if selectedStatesLL[2] == False:
+            game.LL5050()
+            selectedStatesLL[2] = True
 def usedCallFriend():
-    print("CF used")
-    selectedStatesLL[3] = True
+    global popUpType, gameStage
+    if gameStage == 0 and selectedStatesLL[3] == False:
+        gameStage = 1
+        popUpType = "CF"
+        selectedStatesLL[3] = True
 
 LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience ,hoverLL)
 LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost     ,hoverLL)
-LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty  ,hoverLL)
+LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty  ,hoverLL) 
 LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend  ,hoverLL)
+
+    #popUp
+def closePopUp():
+    global gameStage
+    gameStage = 0
+    print(f"gamestage: {gameStage}")
+
+closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePopUp, closeContinue) 
 
     #sound
 soundTgl = Toggle(83, 74, 30, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
@@ -264,9 +286,29 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
     questionRect = questionText.get_rect(center=(x, y))
     screen.blit(questionText, questionRect)
 
-
 # spillogik
 game = Game()
+gameStage = 0
+popUpType = None
+
+def drawPopups(popUpType):
+    if popUpType != None:
+        global gameStage
+        if gameStage == 1:
+            screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))
+            closePopUpBtn.draw()
+            closePopUpBtn.checkPressed()
+            drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False)
+            if popUpType == "AA": #ask audience
+                drawText(FONT0, "Ask the Audience", centerX-popUp.get_size()[0]/2+225, 98, False)
+                selectedStatesLL[0] = True
+            if popUpType == "AH": #ask host
+                drawText(FONT0, "Ask the Host", centerX-popUp.get_size()[0]/2+225, 98, False)
+                selectedStatesLL[1] = True
+            if popUpType == "CF": #call friend
+                drawText(FONT0, "Call a Friend", centerX-popUp.get_size()[0]/2+225, 98, False)
+                selectedStatesLL[3] = True
+
 
 # lydsystem
 sound = Sound()
@@ -288,6 +330,7 @@ while running == True:
     drawWidgets()
     drawStates()
     drawLevels()
+    drawPopups(popUpType)
 
     question = game.getQuestion()["question"]
     drawText(FONT0, question, 450, 530, True)
