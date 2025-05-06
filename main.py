@@ -8,6 +8,8 @@ from game import Game
 
 from soundPlayer import Sound
 
+import threading
+
 pg.init()
 
 screen = pg.display.set_mode((900,700))
@@ -269,7 +271,11 @@ game = Game()
 # lydsystem
 sound = Sound()
 sound.playMainMusic()
-
+volume = 0
+volumeDelta = 0.02
+targetVolume = 0.25
+ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],))
+ttsThread.start()
 
 running = True
 while running == True:
@@ -294,7 +300,11 @@ while running == True:
 
     drawText(FONT1, str(game.getLevel()+1), 448, 638, False)
 
-    sound.setVolume(soundTgl.state)
+    sound.setVolume(soundTgl.state*volume)
+    if volume < targetVolume:
+        volume = min(volume+volumeDelta, targetVolume)
+    elif volume > targetVolume:
+        volume = max(volume-volumeDelta, targetVolume)
 
     if sum(selectedStates):
         if game.getQuestion()["options"][selectedStates.index(True)] != "":
@@ -321,14 +331,19 @@ while running == True:
             correctStates = [False]*4
             selectedStates = [False]*4
             sound.playMainMusic()
+            targetVolume = 0.25
+            ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],))
+            ttsThread.start()
         else:
             selectedStates = [False]*4
     else:
         checkWidgets()
 
-    # lifelines
-    
-
+    try:
+        if not ttsThread.is_alive():
+            targetVolume = 1
+    except:
+        pass
 
     pygame_widgets.update(events) 
     pg.display.update()
