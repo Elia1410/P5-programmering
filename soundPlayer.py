@@ -40,6 +40,13 @@ class Sound:
         pg.mixer.music.load(self.suspenseTheme)
         pg.mixer.music.play(-1)
 
+    def setVolume(self, vol):
+        pg.mixer.music.set_volume(vol)
+        self.effectCorrect.set_volume(vol)
+        self.effectWrong.set_volume(vol)
+        self.effectStartGame.set_volume(vol)
+        self.effectWin.set_volume(vol)
+
 
 if __name__ == "__main__":
     screen = pg.display.set_mode((400, 400))
@@ -67,5 +74,9 @@ if __name__ == "__main__":
             soundsystem.pauseMusic()
         if keys[pg.K_x]:
             soundsystem.unpauseMusic()
+        if keys[pg.K_SPACE]:
+            soundsystem.setVolume(0)
+        if keys[pg.K_b]:
+            soundsystem.setVolume(1)
 
         
