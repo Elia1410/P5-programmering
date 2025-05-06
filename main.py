@@ -24,6 +24,7 @@ class Widget: #superclass
         self.func = func
         self.widgetImage = widgetImage
         self.hoverImage = hoverImage
+        self.justPressed = False
 
     def drawEdges(self):
         pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)
@@ -51,8 +52,13 @@ class Button(Widget): #subclass of Widget for buttons
     def checkPressed(self):
         if self.checkHover() == True:
             pg.event.get()
-            if pg.mouse.get_just_released()[0]:
-               self.func()
+            if pg.mouse.get_pressed()[0]:
+                if not self.justPressed:
+                    self.func()
+                    self.justPressed = True
+            else: 
+                self.justPressed = False
+
 
         
 class Toggle(Widget): #subclass of Widget for toggles
@@ -249,6 +255,12 @@ while running == True:
 
     question = game.getQuestion()["question"]
     drawText(FONT0, question, 450, 530, True)
+
+    options = game.getQuestion()["options"]
+    drawText(FONT0, options[0], 165, 612, False)
+    drawText(FONT0, options[1], 635, 612, False)
+    drawText(FONT0, options[2], 165, 663, False)
+    drawText(FONT0, options[3], 635, 663, False)
 
     pygame_widgets.update(events) 
     pg.display.update()
