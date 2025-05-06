@@ -67,7 +67,7 @@ class Game:
             if random() > 0.5: return f"I'm pretty sure the correct answer is '{answer}'."
             else: f"I'm pretty sure the correct answer is '{choice(incorrect)}'."
         else:
-            return "I wouldn't hazard a guess as i am completely out of my depth on this one. Sorry."
+            return "I wouldn't hazard a guess as i am completely out of my depth with this one. Sorry."
             
 
     def LL5050(self):
@@ -75,6 +75,8 @@ class Game:
         incorrect = [0, 1, 2, 3]
         incorrect.pop(question["answer"])
         incorrect.pop(randint(0,2))
+        for i in incorrect:
+            self.__currentQuestion["options"][i] = ""
         return incorrect
     
 
@@ -89,8 +91,8 @@ class Game:
         if hostKnowledge > 0.45+0.02*self.getLevel():
             return f"It's absolutely '{answer}'. I'm certain."
         elif hostKnowledge > 0.20:
-            if random() > 0.5: return f"I think it's '{answer}' but i cant be sure"
-            else: f"I think it's '{choice(incorrect)}' but i cant be sure."
+            if random() > 0.5: return f"I think it's '{answer}' but i can't be sure"
+            else: f"I think it's '{choice(incorrect)}' but i can't be sure."
         else:
             return "I'm sorry, i just have no idea. Good luck."
 
