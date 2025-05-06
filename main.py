@@ -207,8 +207,8 @@ def showStates():
         if state == True:
             screen.blit(usedLL, destinationsLL[i])
 
-#text blit
-    #level indicator
+
+#level indicator
 FONT0 = pg.font.Font("ARIAL.TTF", size=16)
 FONT1 = pg.font.Font("ARIAL.TTF", size=20)
 levels=[FONT1.render("1   $ 100", True, "orange"),
@@ -247,9 +247,9 @@ def update():
     checkWidgets()
     showStates()
     #blit levels
+    pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360, 140, 24), width=0)
     for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
-
 
 # spillogik
 game = Game()
