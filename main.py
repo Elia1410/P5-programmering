@@ -359,6 +359,9 @@ while running == True:
         targetVolume = 0.25
         ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
         ttsThread.start()
+    
+    if ttsThread.is_alive() == False:
+        targetVolume = 1
 
     pygame_widgets.update(events) 
     pg.display.update()
