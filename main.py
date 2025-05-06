@@ -275,6 +275,10 @@ while running == True:
     drawText(FONT0, options[2], 265, 663, False)
     drawText(FONT0, options[3], 635, 663, False)
 
+    key = pg.key.get_just_pressed()
+    if key[pg.K_p]:
+        game.nextLevel()
+
     pygame_widgets.update(events) 
     pg.display.update()
     clock.tick(FPS)

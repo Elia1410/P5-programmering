@@ -29,7 +29,11 @@ class Game:
         return self.__questionData[str(qLevel+1)][qIndex]
     
     def getQuestion(self):
-        return self.__currentQuestion
+        return {
+            "question": self.__currentQuestion["question"].replace("&amp;", "&"),
+            "options": [option.replace("&amp;", "&") for option in self.__currentQuestion["options"]],
+            "answer": self.__currentQuestion["answer"]
+        }
     
     def gameOver(self):
         self.__level = 0
