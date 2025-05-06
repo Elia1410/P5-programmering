@@ -2,11 +2,6 @@ import pygame as pg
 import threading
 
 import pyttsx3
-engine = pyttsx3.init()
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[0].id)
-rate = engine.getProperty('rate')
-engine.setProperty('rate', 150)
 
 class Sound:
     def __init__(self):
@@ -31,7 +26,13 @@ class Sound:
 
         self.volume = 1
         self.setVolume(self.volume)
-    
+
+        # text-to-speech (pyttsx3)
+        self.engine = pyttsx3.init()
+        voices = self.engine.getProperty('voices')
+        self.engine.setProperty('voice', voices[0].id)
+        self.engine.setProperty('rate', 150)
+
     def playSoundCorrect(self):
         self.effectCorrect.play()
 
@@ -64,6 +65,7 @@ class Sound:
 
     def setVolume(self, vol):
         self.volume = vol
+
         if self.currectTrack == self.mainTheme:
             pg.mixer.music.set_volume(vol*self.mainThemeVolume)
         else:
@@ -74,8 +76,14 @@ class Sound:
         self.effectWin.set_volume(vol*self.effectWinVolume)
 
     def tts(self, text):
-        engine.say(text)
-        engine.runAndWait()
+        if self.volume > 0:
+            try:
+                self.engine.stop()
+            except:
+                pass
+            self.engine.say(text)
+            self.engine.runAndWait()
+        
 
 
 if __name__ == "__main__":
