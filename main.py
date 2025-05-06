@@ -101,8 +101,11 @@ class Toggle(Widget): #subclass of Widget for toggles
                 
 def checkWidgets():
     for w in widgets:
-        w.draw()
         w.checkPressed()
+
+def drawWidgets():
+    for w in widgets:
+        w.draw()
     
 #image related
 bgImg = pg.image.load("pngs/background.png").convert()
@@ -198,7 +201,7 @@ correctStates = [False, False, False, False]
 selectedStatesLL = [False, False, False, False]
 usedStatesLL = [False, False, False, False]
 
-def showStates():
+def drawStates():
     for i, state in enumerate(selectedStates):
         if state == True:
             screen.blit(selectedAnwser, destinations[i])
@@ -227,6 +230,12 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("14  $ 500.000", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
 
+def drawLevels():
+    #blit levels
+    pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360, 140, 24), width=0)
+    for i, level in enumerate(levels):
+        screen.blit(level, (740, 360 -(i*25)))
+
 
 def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen = 80, color="white"):
     if len(text) > wrapLen and wrap == True:
@@ -243,14 +252,6 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
     screen.blit(questionText, questionRect)
 
 
-def update():
-    checkWidgets()
-    showStates()
-    #blit levels
-    pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360, 140, 24), width=0)
-    for i, level in enumerate(levels):
-        screen.blit(level, (740, 360 -(i*25)))
-
 # spillogik
 game = Game()
 suspenseWait = FPS * 3
@@ -264,7 +265,8 @@ while running == True:
             running = False
 
     screen.blit(bgImg, (0,0))
-    update()
+    drawStates()
+    drawLevels()
 
     question = game.getQuestion()["question"]
     drawText(FONT0, question, 450, 530, True)
@@ -275,9 +277,9 @@ while running == True:
     drawText(FONT0, options[2], 265, 663, False)
     drawText(FONT0, options[3], 635, 663, False)
 
-    key = pg.key.get_just_pressed()
-    if key[pg.K_p]:
-        game.nextLevel()
+    if sum(selectedStates):
+        pass
+
 
     pygame_widgets.update(events) 
     pg.display.update()
