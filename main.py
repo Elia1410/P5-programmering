@@ -30,6 +30,7 @@ class Widget: #superclass
         pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)
         pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)
 
+
 class Button(Widget): #subclass of Widget for buttons
     def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None):
         super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
@@ -57,7 +58,6 @@ class Button(Widget): #subclass of Widget for buttons
                     self.justPressed = True
             else: 
                 self.justPressed = False
-
 
         
 class Toggle(Widget): #subclass of Widget for toggles
@@ -89,19 +89,21 @@ class Toggle(Widget): #subclass of Widget for toggles
     def checkPressed(self):
         if self.checkHover() == True:
             pg.event.get()
-            if pg.mouse.get_just_released()[0]:
-                if self.state == True:
-                   self.state = False
-                else:
-                    self.state = True
-        
-
+            if pg.mouse.get_pressed()[0]:
+                if not self.justPressed:
+                    if self.state == True:
+                        self.state = False
+                    else:
+                        self.state = True
+                    self.justPressed = True
+            else: 
+                self.justPressed = False
+                
 def checkWidgets():
     for w in widgets:
         w.draw()
         w.checkPressed()
     
-
 #image related
 bgImg = pg.image.load("pngs/background.png").convert()
 askAudience = pg.transform.scale(pg.image.load("pngs/askaudience.png"), (85, 52)).convert()
@@ -127,14 +129,16 @@ usedLL = pg.transform.scale(pg.image.load("pngs/LLused.png"), (85, 52)).convert_
 usedLL.set_alpha(80)
 hoverLL = pg.transform.scale(pg.image.load("pngs/LLselected.png"), (85, 52)).convert_alpha()
 hoverLL.set_alpha(50)
-destAskAudience, destAskHost, dest5050, destCallFriend = (30, 80), (30, 150), (30, 230), (30, 280)
+destAskAudience, destAskHost, dest5050, destCallFriend = (30, 125), (30, 190), (30, 255), (30, 320)
 destinationsLL = [destAskAudience, destAskHost, dest5050, destCallFriend]
 
     #sound toggle
-soundOn = pg.transform.scale(pg.image.load("pngs/sound on.png"), (83, 74)).convert()
-soundOff = pg.transform.scale(pg.image.load("pngs/sound off.png"), (83, 74)).convert()
-soundOnHover = pg.transform.scale(pg.image.load("pngs/sound on hover.png"), (83, 74)).convert_alpha()
-soundOffHover = pg.transform.scale(pg.image.load("pngs/sound off hover.png"), (83, 74)).convert_alpha()
+soundOn = pg.transform.scale(pg.image.load("pngs/sound on.png"), (int(83*0.75), int(74*0.75))).convert()
+soundOff = pg.transform.scale(pg.image.load("pngs/sound off.png"), (int(83*0.75), int(74*0.75))).convert()
+soundOnHover = pg.transform.scale(pg.image.load("pngs/sound on hover.png"), (int(83*0.75), int(74*0.75))).convert_alpha()
+soundOnHover.set_alpha(80)
+soundOffHover = pg.transform.scale(pg.image.load("pngs/sound off hover.png"), (int(83*0.75), int(74*0.75))).convert_alpha()
+soundOffHover.set_alpha(80)
 
     #popup
 popUp = pg.image.load("pngs/pop up image.png").convert()
@@ -180,7 +184,7 @@ LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used50
 LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend  ,hoverLL)
 
     #sound
-soundTgl = Toggle(83, 74, 75, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
+soundTgl = Toggle(83, 74, 30, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
 
 # list of all widgets
 widgets = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn, soundTgl]
