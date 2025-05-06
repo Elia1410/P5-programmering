@@ -30,22 +30,21 @@ class Widget: #superclass
         pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)
 
 class Button(Widget): #subclass of Widget for buttons
-    def __init__(self, width, height, posX, posY, func, widgetImage, hoverImage):
+    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None):
         super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
         self.buttonImage = widgetImage
 
     def draw(self):
-        screen.blit(self.buttonImage, (self.posX, self.posY))
-
-    def setText(self):
-        pass
+        if self.buttonImage != None:
+            screen.blit(self.buttonImage, (self.posX, self.posY))
 
     def checkHover(self):
         isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
         isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            screen.blit(self.hoverImage, (self.posX, self.posY))
+            if self.hoverImage != None:
+                screen.blit(self.hoverImage, (self.posX, self.posY))
             return self.isHover
     
     def checkPressed(self):
@@ -56,27 +55,29 @@ class Button(Widget): #subclass of Widget for buttons
 
         
 class Toggle(Widget): #subclass of Widget for toggles
-    def __init__(self, width, height, posX, posY, widgetImages, hoverImages, state):
-        super().__init__(width, height, posX, posY)
+    def __init__(self, width, height, posX, posY, state, widgetImages = None, hoverImages = None):
+        super().__init__(width, height, posX, posY, func=None, widgetImage=None, hoverImage=None)
+        self.state = state
         self.toggleImages = widgetImages
         self.hoverImages = hoverImages
-        self.state = state
 
     def draw(self):
-        if self.state == True:
-            screen.blit(self.toggleImages[0], (self.posX, self.posY))
-        else:
-            screen.blit(self.toggleImages[1], (self.posX, self.posY))
+        if self.toggleImages != None:
+            if self.state == True:
+                screen.blit(self.toggleImages[0], (self.posX, self.posY))
+            else:
+                screen.blit(self.toggleImages[1], (self.posX, self.posY))
     
     def checkHover(self):
         isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
         isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            if self.state == True:
-                screen.blit(self.hoverImages[0], (self.posX, self.posY))
-            else:
-                screen.blit(self.hoverImages[1], (self.posX, self.posY))
+            if self.hoverImages != None:
+                if self.state == True:
+                    screen.blit(self.hoverImages[0], (self.posX, self.posY))
+                else:
+                    screen.blit(self.hoverImages[1], (self.posX, self.posY))
             return self.isHover
         
     def checkPressed(self):
@@ -92,6 +93,7 @@ class Toggle(Widget): #subclass of Widget for toggles
 def checkWidgets():
     for w in widgets:
         w.draw()
+        w.checkPressed()
     
 
 #image related
@@ -147,10 +149,10 @@ def selectedD():
     print("D Pressed")
     selectedStates[3] = True
 
-anwserBtnA = Button(433-93,  632-593, destA[0], destA[1], selectedA, hoverAnwser)
-anwserBtnC = Button(433-93,  682-643, destC[0], destC[1], selectedC, hoverAnwser)
-anwserBtnB = Button(800-460, 632-593, destB[0], destB[1], selectedB, hoverAnwser)
-anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverAnwser)
+anwserBtnA = Button(433-93,  632-593, destA[0], destA[1], selectedA, hoverImage=hoverAnwser)
+anwserBtnC = Button(433-93,  682-643, destC[0], destC[1], selectedC, hoverImage=hoverAnwser)
+anwserBtnB = Button(800-460, 632-593, destB[0], destB[1], selectedB, hoverImage=hoverAnwser)
+anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverImage=hoverAnwser)
 
     #lifelines
 def usedAskAudience():
@@ -166,13 +168,13 @@ def usedCallFriend():
     print("CF used")
     selectedStatesLL[3] = True
 
-LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, hoverLL)
-LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     hoverLL)
-LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        hoverLL)
-LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  hoverLL)
+LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience ,hoverLL)
+LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost     ,hoverLL)
+LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty  ,hoverLL)
+LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend  ,hoverLL)
 
     #sound
-soundTgl = Toggle(83, 74, 75, 30, (soundOnHover, soundOffHover), True)
+soundTgl = Toggle(83, 74, 75, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
 
 # list of all widgets
 widgets = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn, soundTgl]
@@ -231,6 +233,14 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
     screen.blit(questionText, questionRect)
 
 
+def update():
+    checkWidgets()
+    showStates()
+    #blit levels
+    for i, level in enumerate(levels):
+        screen.blit(level, (740, 360 -(i*25)))
+
+
 # spillogik
 game = Game()
 suspenseWait = FPS * 3
@@ -243,9 +253,8 @@ while running == True:
         if event.type == pg.QUIT:  
             running = False
 
-    screen.fill((255,255,255))
-
-    checkWidgets()
+    screen.blit(bgImg, (0,0))
+    update()
 
     question = game.getQuestion()["question"]
     drawText(FONT0, question, 450, 530, True)
