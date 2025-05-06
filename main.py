@@ -117,7 +117,7 @@ askAudience = pg.transform.scale(pg.image.load("pngs/askaudience.png"), (85, 52)
 askHost = pg.transform.scale(pg.image.load("pngs/askhost.png"), (85, 52)).convert()
 fiftyFifty = pg.transform.scale(pg.image.load("pngs/5050.png"), (85, 52)).convert()
 callFriend = pg.transform.scale(pg.image.load("pngs/call.png"), (85, 52)).convert()
-
+levelIndicator = pg.image.load("pngs/level_indicator.png").convert_alpha()
 
     #anwser buttons
 correctAnwser = pg.image.load("pngs/correct.png").convert_alpha()
@@ -240,12 +240,11 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
 
 def drawLevels():
     #blit inidicator
-    pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360-(game.getLevel()*25), 140, 24), width=0)
+    #pg.draw.rect(screen, (80, 120 , 180), pg.Rect(740, 360-(game.getLevel()*25), 140, 24), width=0)
+    screen.blit(levelIndicator, (730, 360-(game.getLevel()*25)))
     #blit levels
     for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
-
-    
 
 
 def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen = 80, color="white"):
