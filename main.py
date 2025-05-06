@@ -2,6 +2,8 @@ import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
 
+from game import Game
+
 pg.init()
 
 screen = pg.display.set_mode((900,700))
@@ -9,6 +11,8 @@ center = (screen.get_width()/2, screen.get_height()/2)
 centerX = screen.get_width()/2 
 centerY = screen.get_height()/2
 pg.display.set_caption("WWTBAM")
+clock = pg.Clock()
+FPS = 60
 
 class Widget: #superclass
     def __init__(self, width, height, posX, posY, func, widgetImage, hoverImage):
@@ -128,9 +132,6 @@ soundOffHover = pg.transform.scale(pg.image.load("pngs/sound off hover.png"), (8
 popUp = pg.image.load("pngs/pop up image.png").convert()
 
 
-#Question box
-question = Button(screen, 450, 532, 0, 0, text="What makes the moon “glow”?", textColour="white", textHAlign=center)
-
 #buttons
     #anwser buttons 
 def selectedA():
@@ -196,6 +197,7 @@ def showStates():
 
 #text blit
     #level indicator
+FONT0 = pg.font.Font("ARIAL.TTF", size=16)
 FONT1 = pg.font.Font("ARIAL.TTF", size=20)
 levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("2   $ 200", True, "orange"),
@@ -214,6 +216,26 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
 
 
+def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen = 80, color="white"):
+    if len(text) > wrapLen and wrap == True:
+        textWrapped = ""
+        textSplit = text.split(" ")
+        for word in textSplit:
+            if len(textWrapped.split("\n")[-1]) > 80:
+                textWrapped += "\n"
+            textWrapped += word + " "
+        text = textWrapped
+    
+    questionText = font.render(text, True, color)
+    questionRect = questionText.get_rect(center=(x, y))
+    screen.blit(questionText, questionRect)
+
+
+# spillogik
+game = Game()
+suspenseWait = FPS * 3
+
+
 running = True
 while running == True:
     events = pg.event.get()
@@ -225,5 +247,9 @@ while running == True:
 
     checkWidgets()
 
+    question = game.getQuestion()["question"]
+    drawText(FONT0, question, 450, 530, True)
+
     pygame_widgets.update(events) 
     pg.display.update()
+    clock.tick(FPS)
