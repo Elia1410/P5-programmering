@@ -270,9 +270,9 @@ while running == True:
     drawText(FONT0, question, 450, 530, True)
 
     options = game.getQuestion()["options"]
-    drawText(FONT0, options[0], 165, 612, False)
+    drawText(FONT0, options[0], 265, 612, False)
     drawText(FONT0, options[1], 635, 612, False)
-    drawText(FONT0, options[2], 165, 663, False)
+    drawText(FONT0, options[2], 265, 663, False)
     drawText(FONT0, options[3], 635, 663, False)
 
     pygame_widgets.update(events) 
