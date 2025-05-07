@@ -160,18 +160,22 @@ def selectedA():
     if popUpShown == False:
         print("A Pressed")
         selectedStates[0] = True
+        sound.playSoundButton()
 def selectedB():
     if popUpShown == False:
         print("B Pressed")
         selectedStates[1] = True
+        sound.playSoundButton()
 def selectedC():
     if popUpShown == False:
         print("C Pressed")
         selectedStates[2] = True
+        sound.playSoundButton()
 def selectedD():
     if popUpShown == False:
         print("D Pressed")
         selectedStates[3] = True
+        sound.playSoundButton()
 
 anwserBtnA = Button(433-93,  632-593, destA[0], destA[1], selectedA, hoverImage=hoverAnwser)
 anwserBtnC = Button(433-93,  682-643, destC[0], destC[1], selectedC, hoverImage=hoverAnwser)
@@ -186,23 +190,29 @@ def usedAskAudience():
         popUpShown = True
         popUpType = "AA"
         selectedStatesLL[0] = True
+        sound.playSoundButton()
 def usedAskHost():
-    global popUpType, popUpShown
+    global popUpType, popUpShown, hostAnswer
     if popUpShown == False and selectedStatesLL[1] == False:
+        hostAnswer = game.LLaskHost()
         popUpShown = True
         popUpType = "AH"
         selectedStatesLL[1] = True
+        sound.playSoundButton()
 def used5050():
     if popUpShown == False:
         if selectedStatesLL[2] == False:
             game.LL5050()
             selectedStatesLL[2] = True
+            sound.playSoundButton()
 def usedCallFriend():
-    global popUpType, popUpShown
+    global popUpType, popUpShown, friendAnswer
     if popUpShown == False and selectedStatesLL[3] == False:
+        friendAnswer = game.LLcallFriend()
         popUpShown = True
         popUpType = "CF"
         selectedStatesLL[3] = True
+        sound.playSoundButton()
 
 LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience ,hoverLL)
 LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost     ,hoverLL)
@@ -214,6 +224,7 @@ def closePopUp():
     global popUpShown
     popUpShown = False
     print(f"popUpShown: {popUpShown}")
+    sound.playSoundButton()
 
 closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePopUp, closeContinue) 
 
@@ -278,7 +289,7 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
         textWrapped = ""
         textSplit = text.split(" ")
         for word in textSplit:
-            if len(textWrapped.split("\n")[-1]) > 80:
+            if len(textWrapped.split("\n")[-1]) > wrapLen:
                 textWrapped += "\n"
             textWrapped += word + " "
         text = textWrapped
@@ -309,10 +320,12 @@ def drawPopups(popUpType):
 
             if popUpType == "AH": #ask host
                 drawText(FONT0, "Ask the Host", centerX-popUp.get_size()[0]/2+225, 98, False)
+                drawText(FONT0, hostAnswer, centerX-popUp.get_size()[0]/2+225, 190, True, 40)
                 selectedStatesLL[1] = True
                 
             if popUpType == "CF": #call friend
                 drawText(FONT0, "Call a Friend", centerX-popUp.get_size()[0]/2+225, 98, False)
+                drawText(FONT0, friendAnswer, centerX-popUp.get_size()[0]/2+225, 190, True, 40)
                 selectedStatesLL[3] = True
 
 suspenseCooldown = 0
@@ -407,7 +420,7 @@ while running == True:
         ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
         ttsThread.start()
     
-    
+
     if suspenseCooldown + revealCooldown == 0:
         checkWidgets()
 
