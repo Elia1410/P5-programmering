@@ -225,7 +225,7 @@ while running == True:
 
     # hent og tegn spørgsmål fra Game objekt
     question = game.getQuestion()["question"]
-    drawText(FONT0, question, 450, 530, True)
+    drawText(FONT0, question, 450, 530, True, 75)
 
     # hent og tegn svarmuligheder fra Game objekt
     options = game.getQuestion()["options"]
