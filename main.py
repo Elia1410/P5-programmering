@@ -157,19 +157,19 @@ closeContinue = pg.transform.scale(pg.image.load("pngs/closePopUp.png"), (250, 4
 #buttons
     #anwser buttons 
 def selectedA():
-    if gameStage == 0:
+    if popUpShown == False:
         print("A Pressed")
         selectedStates[0] = True
 def selectedB():
-    if gameStage == 0:
+    if popUpShown == False:
         print("B Pressed")
         selectedStates[1] = True
 def selectedC():
-    if gameStage == 0:
+    if popUpShown == False:
         print("C Pressed")
         selectedStates[2] = True
 def selectedD():
-    if gameStage == 0:
+    if popUpShown == False:
         print("D Pressed")
         selectedStates[3] = True
 
@@ -180,27 +180,27 @@ anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverImage=
 
     #lifelines
 def usedAskAudience():
-    global popUpType, gameStage, propabilities
-    if gameStage == 0 and selectedStatesLL[0] == False:
+    global popUpType, popUpShown, propabilities
+    if popUpShown == False and selectedStatesLL[0] == False:
         propabilities = game.LLaskAudience()
-        gameStage = 1
+        popUpShown = True
         popUpType = "AA"
         selectedStatesLL[0] = True
 def usedAskHost():
-    global popUpType, gameStage
-    if gameStage == 0 and selectedStatesLL[1] == False:
-        gameStage = 1
+    global popUpType, popUpShown
+    if popUpShown == False and selectedStatesLL[1] == False:
+        popUpShown = True
         popUpType = "AH"
         selectedStatesLL[1] = True
 def used5050():
-    if gameStage == 0:
+    if popUpShown == False:
         if selectedStatesLL[2] == False:
             game.LL5050()
             selectedStatesLL[2] = True
 def usedCallFriend():
-    global popUpType, gameStage
-    if gameStage == 0 and selectedStatesLL[3] == False:
-        gameStage = 1
+    global popUpType, popUpShown
+    if popUpShown == False and selectedStatesLL[3] == False:
+        popUpShown = True
         popUpType = "CF"
         selectedStatesLL[3] = True
 
@@ -211,9 +211,9 @@ LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCa
 
     #popUp
 def closePopUp():
-    global gameStage
-    gameStage = 0
-    print(f"gamestage: {gameStage}")
+    global popUpShown
+    popUpShown = False
+    print(f"popUpShown: {popUpShown}")
 
 closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePopUp, closeContinue) 
 
@@ -289,13 +289,13 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
 
 # spillogik
 game = Game()
-gameStage = 0 #options are 0:main and 1:popup
+popUpShown = False #options are 0:main and 1:popup
 popUpType = None
 
 def drawPopups(popUpType):
     if popUpType != None:
-        global gameStage, propabilities
-        if gameStage == 1:
+        global popUpShown, propabilities
+        if popUpShown == True:
             screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))
             closePopUpBtn.draw()
             closePopUpBtn.checkPressed()
