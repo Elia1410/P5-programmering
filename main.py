@@ -20,160 +20,33 @@ pg.display.set_caption("WWTBAM")
 clock = pg.Clock()
 FPS = 60
 
-class Widget: #superclass
-    def __init__(self, width, height, posX, posY, func, widgetImage, hoverImage):
-        self.width = width
-        self.height = height
-        self.posX = posX
-        self.posY = posY
-        self.isHover = False
-        self.func = func
-        self.widgetImage = widgetImage
-        self.hoverImage = hoverImage
-        self.justPressed = False
-
-    def drawEdges(self):
-        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)
-        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)
-
-
-class Button(Widget): #subclass of Widget for buttons
-    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None,):
-        super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
-        self.buttonImage = widgetImage
-
-    def draw(self):
-        if self.buttonImage != None:
-            screen.blit(self.buttonImage, (self.posX, self.posY))
-
-    def checkHover(self):
-        isHoverX = pg.mouse.get_pos()[0] in list(range(int(self.posX), int(self.posX+self.width)))
-        isHoverY = pg.mouse.get_pos()[1] in list(range(int(self.posY), int(self.posY+self.height)))
-        if isHoverX == True & isHoverY == True:
-            self.isHover = True
-            if self.hoverImage != None:
-                screen.blit(self.hoverImage, (self.posX, self.posY))
-            return self.isHover
-    
-    def checkPressed(self):
-        if self.checkHover() == True:
-            pg.event.get()
-            if pg.mouse.get_pressed()[0]:
-                if not self.justPressed:
-                    self.func()
-
-                    self.justPressed = True
-            else: 
-                self.justPressed = False
-        
-class Toggle(Widget): #subclass of Widget for toggles
-    def __init__(self, width, height, posX, posY, state, widgetImages = None, hoverImages = None):
-        super().__init__(width, height, posX, posY, func=None, widgetImage=None, hoverImage=None)
-        self.state = state
-        self.toggleImages = widgetImages
-        self.hoverImages = hoverImages
-
-    def draw(self):
-        if self.toggleImages != None:
-            if self.state == True:
-                screen.blit(self.toggleImages[0], (self.posX, self.posY))
-            else:
-                screen.blit(self.toggleImages[1], (self.posX, self.posY))
-    
-    def checkHover(self):
-        isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
-        isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
-        if isHoverX == True & isHoverY == True:
-            self.isHover = True
-            if self.hoverImages != None:
-                if self.state == True:
-                    screen.blit(self.hoverImages[0], (self.posX, self.posY))
-                else:
-                    screen.blit(self.hoverImages[1], (self.posX, self.posY))
-            return self.isHover
-        
-    def checkPressed(self):
-        if self.checkHover() == True:
-            pg.event.get()
-            if pg.mouse.get_pressed()[0]:
-                if not self.justPressed:
-                    if self.state == True:
-                        self.state = False
-                    else:
-                        self.state = True
-                    self.justPressed = True
-            else: 
-                self.justPressed = False
+from assets import *
+from widget import Button, Toggle
                 
 def checkWidgets():
     for w in widgets:
-        w.checkPressed()
+        w.checkPressed(screen)
 
 def drawWidgets():
     for w in widgets:
-        w.draw()
-    
-#image related
-bgImg = pg.image.load("pngs/background.png").convert()
-askAudience = pg.transform.scale(pg.image.load("pngs/askaudience.png"), (85, 52)).convert()
-askHost = pg.transform.scale(pg.image.load("pngs/askhost.png"), (85, 52)).convert()
-fiftyFifty = pg.transform.scale(pg.image.load("pngs/5050.png"), (85, 52)).convert()
-callFriend = pg.transform.scale(pg.image.load("pngs/call.png"), (85, 52)).convert()
-levelIndicator = pg.image.load("pngs/level_indicator.png").convert_alpha()
-
-    #anwser buttons
-correctAnwser = pg.image.load("pngs/correct.png").convert_alpha()
-correctAnwser.set_alpha(100)
-selectedAnwser = pg.image.load("pngs/selected.png").convert_alpha()
-selectedAnwser.set_alpha(100)
-hoverAnwser = pg.image.load("pngs/selected.png").convert_alpha()
-hoverAnwser.set_alpha(35)
-disabledAnwser = pg.image.load("pngs/unavailable.png").convert_alpha()
-disabledAnwser.set_alpha(80)
-destA, destB, destC, destD = (93, 592), (460, 592), (93, 642), (460, 642)
-destinations = [destA, destB, destC, destD]
-
-    #lifeline buttons
-usedLL = pg.transform.scale(pg.image.load("pngs/LLused.png"), (85, 52)).convert_alpha()
-usedLL.set_alpha(80)
-hoverLL = pg.transform.scale(pg.image.load("pngs/LLselected.png"), (85, 52)).convert_alpha()
-hoverLL.set_alpha(50)
-destAskAudience, destAskHost, dest5050, destCallFriend = (30, 125), (30, 190), (30, 255), (30, 320)
-destinationsLL = [destAskAudience, destAskHost, dest5050, destCallFriend]
-
-    #sound toggle
-soundOn = pg.transform.scale(pg.image.load("pngs/sound on.png"), (int(83*0.75), int(74*0.75))).convert()
-soundOff = pg.transform.scale(pg.image.load("pngs/sound off.png"), (int(83*0.75), int(74*0.75))).convert()
-soundOnHover = pg.transform.scale(pg.image.load("pngs/sound on hover.png"), (int(83*0.75), int(74*0.75))).convert_alpha()
-soundOnHover.set_alpha(80)
-soundOffHover = pg.transform.scale(pg.image.load("pngs/sound off hover.png"), (int(83*0.75), int(74*0.75))).convert_alpha()
-soundOffHover.set_alpha(80)
-
-    #popup image
-popUp = pg.transform.scale(pg.image.load("pngs/pop up image.png"), (int(590*0.75), int(414*0.75))).convert_alpha()
-closeContinue = pg.transform.scale(pg.image.load("pngs/closePopUp.png"), (250, 45)).convert_alpha()
-
+        w.draw(screen)
 
 #buttons
     #anwser buttons 
 def selectedA():
     if popUpShown == False:
-        print("A Pressed")
         selectedStates[0] = True
         sound.playSoundButton()
 def selectedB():
     if popUpShown == False:
-        print("B Pressed")
         selectedStates[1] = True
         sound.playSoundButton()
 def selectedC():
     if popUpShown == False:
-        print("C Pressed")
         selectedStates[2] = True
         sound.playSoundButton()
 def selectedD():
     if popUpShown == False:
-        print("D Pressed")
         selectedStates[3] = True
         sound.playSoundButton()
 
@@ -223,7 +96,6 @@ LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCa
 def closePopUp():
     global popUpShown
     popUpShown = False
-    print(f"popUpShown: {popUpShown}")
     sound.playSoundButton()
 
 closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePopUp, closeContinue) 
@@ -255,26 +127,6 @@ def drawStates():
     for i, state in enumerate(selectedStatesLL):
         if state == True:
             screen.blit(usedLL, destinationsLL[i])
-
-
-#level indicator
-FONT0 = pg.font.Font("ARIAL.TTF", size=16)
-FONT1 = pg.font.Font("ARIAL.TTF", size=20)
-levels=[FONT1.render("1   $ 100", True, "orange"),
-        FONT1.render("2   $ 200", True, "orange"),
-        FONT1.render("3   $ 300", True, "orange"),
-        FONT1.render("4   $ 500", True, "orange"),
-        FONT1.render("5   $ 1.000", True, "white"),
-        FONT1.render("6   $ 2.000", True, "orange"),
-        FONT1.render("7   $ 4.000", True, "orange"),
-        FONT1.render("8   $ 8.000", True, "orange"),
-        FONT1.render("9   $ 16.000", True, "orange"),
-        FONT1.render("10  $ 32.000", True, "white"),
-        FONT1.render("11  $ 64.000", True, "orange"),
-        FONT1.render("12  $ 125.000", True, "orange"),
-        FONT1.render("13  $ 250.000", True, "orange"),
-        FONT1.render("14  $ 500.000", True, "orange"),
-        FONT1.render("15  $ 1.000.000", True, "white")]
 
 def drawLevels():
     #blit inidicator
@@ -308,8 +160,8 @@ def drawPopups(popUpType):
         global popUpShown, propabilities
         if popUpShown == True:
             screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))
-            closePopUpBtn.draw()
-            closePopUpBtn.checkPressed()
+            closePopUpBtn.draw(screen)
+            closePopUpBtn.checkPressed(screen)
             drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False)
 
             if popUpType == "AA": #ask audience
