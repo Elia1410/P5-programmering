@@ -1,9 +1,8 @@
 import pygame as pg
-import threading
-
 import pyttsx3
 
 class Sound:
+    """Objekt til styring af lydeffekter, musik og TTS (Text To Speech)"""
     def __init__(self):
         # lydeffekter:
         self.effectButton = pg.mixer.Sound('sounds/button.wav')
@@ -91,7 +90,7 @@ class Sound:
             self.engine.runAndWait()
         
 
-
+# test af lydsystem
 if __name__ == "__main__":
 
     pg.init()
@@ -125,7 +124,6 @@ if __name__ == "__main__":
         if keys[pg.K_b]:
             soundsystem.setVolume(1)
         if keys[pg.K_k]:
-            print("hello world")
-            soundsystem.tts("Australian researchers named two of their male palm cockatoos Ringo and Phil Collins after discovering that in order to impress females, the birds will do what?")
+            soundsystem.tts("Hello World")
 
         
