@@ -43,6 +43,7 @@ closeContinue = pg.transform.scale(pg.image.load("pngs/closePopUp.png"), (250, 4
 # skrifttyper
 FONT0 = pg.font.Font("ARIAL.TTF", size=16)
 FONT1 = pg.font.Font("ARIAL.TTF", size=20)
+FONT2 = pg.font.Font("ARIAL.TTF", size=14)
 
 # text til milesten
 levels=[FONT1.render("1   $ 100", True, "orange"),

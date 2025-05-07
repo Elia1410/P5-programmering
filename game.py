@@ -65,7 +65,7 @@ class Game:
             return f"I'm most certain the correct answer is '{answer}'."
         elif hostKnowledge > 0.25:
             if random() > 0.5: return f"I'm pretty sure the correct answer is '{answer}'."
-            else: f"I'm pretty sure the correct answer is '{choice(incorrect)}'."
+            else: return f"I'm pretty sure the correct answer is '{choice(incorrect)}'."
         else:
             return "I wouldn't hazard a guess as i am completely out of my depth with this one. Sorry."
             
@@ -92,7 +92,7 @@ class Game:
             return f"It's absolutely '{answer}'. I'm certain."
         elif hostKnowledge > 0.20:
             if random() > 0.5: return f"I think it's '{answer}' but i can't be sure"
-            else: f"I think it's '{choice(incorrect)}' but i can't be sure."
+            else: return f"I think it's '{choice(incorrect)}' but i can't be sure."
         else:
             return "I'm sorry, i just have no idea. Good luck."
 

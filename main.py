@@ -214,10 +214,10 @@ while running == True:
     drawText(FONT0, question, 450, 530, True)
 
     options = game.getQuestion()["options"]
-    drawText(FONT0, options[0], 265, 612, False)
-    drawText(FONT0, options[1], 635, 612, False)
-    drawText(FONT0, options[2], 265, 663, False)
-    drawText(FONT0, options[3], 635, 663, False)
+    drawText(FONT2, options[0], 265, 612, False)
+    drawText(FONT2, options[1], 635, 612, False)
+    drawText(FONT2, options[2], 265, 663, False)
+    drawText(FONT2, options[3], 635, 663, False)
 
     drawText(FONT1, str(game.getLevel()+1), 448, 638, False)
 
@@ -246,13 +246,19 @@ while running == True:
             correctStates = selectedStates.copy()
             selectedStates = [False]*4
             sound.playSoundCorrect()
-            guessWasCorrect = True
+            if game.getLevel() < 14:
+                guessWasCorrect = True
+                revealCooldown = cooldownDelta
+            else:
+                guessWasCorrect = False
+                sound.playSoundWin()
+                revealCooldown = 26*FPS
         else:
             correctStates[game.getQuestion()["answer"]] = True
             sound.playSoundWrong()
             guessWasCorrect = False
             selectedStatesLL = [False]*4
-        revealCooldown = cooldownDelta
+            revealCooldown = cooldownDelta
     
     if revealCooldown > 1:
         revealCooldown -= 1
