@@ -6,6 +6,7 @@ import pyttsx3
 class Sound:
     def __init__(self):
         # lydeffekter:
+        self.effectButton = pg.mixer.Sound('sounds/button.wav')
         self.effectCorrect = pg.mixer.Sound('sounds/correct.wav')
         self.effectWrong = pg.mixer.Sound('sounds/wrong.wav')
         self.effectStartGame = pg.mixer.Sound('sounds/startGame.wav')
@@ -19,6 +20,7 @@ class Sound:
         # lydstyrke
         self.mainThemeVolume = 0.1
         self.suspenseThemeVolume = 0.8
+        self.effectButtonVolume = 0.5
         self.effectCorrectVolume = 1
         self.effectWrongVolume = 1
         self.effectStartGameVolume = 1
@@ -32,6 +34,9 @@ class Sound:
         voices = self.engine.getProperty('voices')
         self.engine.setProperty('voice', voices[0].id)
         self.engine.setProperty('rate', 150)
+
+    def playSoundButton(self):
+        self.effectButton.play()
 
     def playSoundCorrect(self):
         self.effectCorrect.play()
@@ -70,6 +75,7 @@ class Sound:
             pg.mixer.music.set_volume(vol*self.mainThemeVolume)
         else:
             pg.mixer.music.set_volume(vol*self.suspenseThemeVolume)
+        self.effectCorrect.set_volume(vol*self.effectButtonVolume)
         self.effectCorrect.set_volume(vol*self.effectCorrectVolume)
         self.effectWrong.set_volume(vol*self.effectWrongVolume)
         self.effectStartGame.set_volume(vol*self.effectStartGameVolume)
