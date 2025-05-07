@@ -369,8 +369,6 @@ while running == True:
             suspenseCooldown = cooldownDelta
         else:
             selectedStates = [False]*4
-    else:
-        checkWidgets()
         
     if suspenseCooldown > 1:
         suspenseCooldown -= 1
@@ -409,6 +407,10 @@ while running == True:
         ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
         ttsThread.start()
     
+    
+    if suspenseCooldown + revealCooldown == 0:
+        checkWidgets()
+
     if ttsThread.is_alive() == False:
         targetVolume = 1
 
