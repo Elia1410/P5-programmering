@@ -180,8 +180,9 @@ anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverImage=
 
     #lifelines
 def usedAskAudience():
-    global popUpType, gameStage
+    global popUpType, gameStage, propabilities
     if gameStage == 0 and selectedStatesLL[0] == False:
+        propabilities = game.LLaskAudience()
         gameStage = 1
         popUpType = "AA"
         selectedStatesLL[0] = True
@@ -288,23 +289,28 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
 
 # spillogik
 game = Game()
-gameStage = 0
+gameStage = 0 #options are 0:main and 1:popup
 popUpType = None
 
 def drawPopups(popUpType):
     if popUpType != None:
-        global gameStage
+        global gameStage, propabilities
         if gameStage == 1:
             screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))
             closePopUpBtn.draw()
             closePopUpBtn.checkPressed()
             drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False)
+
             if popUpType == "AA": #ask audience
                 drawText(FONT0, "Ask the Audience", centerX-popUp.get_size()[0]/2+225, 98, False)
+                for i, p in enumerate(propabilities):
+                    drawText(FONT1, f"{p}%", centerX-popUp.get_size()[0]/2+i*40, 330, False)
                 selectedStatesLL[0] = True
+
             if popUpType == "AH": #ask host
                 drawText(FONT0, "Ask the Host", centerX-popUp.get_size()[0]/2+225, 98, False)
                 selectedStatesLL[1] = True
+                
             if popUpType == "CF": #call friend
                 drawText(FONT0, "Call a Friend", centerX-popUp.get_size()[0]/2+225, 98, False)
                 selectedStatesLL[3] = True
