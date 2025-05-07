@@ -7,15 +7,15 @@ class Sound:
 
 
         # lydeffekter:
-        self.effectButton = pg.mixer.Sound('audio/sounds/button.wav')
-        self.effectCorrect = pg.mixer.Sound('audio/sounds/correct.wav')
-        self.effectWrong = pg.mixer.Sound('audio/sounds/wrong.wav')
-        self.effectStartGame = pg.mixer.Sound('audio/sounds/startGame.wav')
-        self.effectWin = pg.mixer.Sound('audio/sounds/win.wav')
+        self.effectButton = pg.mixer.Sound('DATA/audio/sounds/button.wav')
+        self.effectCorrect = pg.mixer.Sound('DATA/audio/sounds/correct.wav')
+        self.effectWrong = pg.mixer.Sound('DATA/audio/sounds/wrong.wav')
+        self.effectStartGame = pg.mixer.Sound('DATA/audio/sounds/startGame.wav')
+        self.effectWin = pg.mixer.Sound('DATA/audio/sounds/win.wav')
     
         # musik:
-        self.mainTheme = 'audio/sounds/mainTheme.mp3'
-        self.suspenseTheme = 'audio/sounds/suspense.mp3'
+        self.mainTheme = 'DATA/audio/sounds/mainTheme.mp3'
+        self.suspenseTheme = 'DATA/audio/sounds/suspense.mp3'
         self.currectTrack = None
 
         # lydstyrke

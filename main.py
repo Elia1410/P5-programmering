@@ -1,10 +1,11 @@
 import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
+from os import system
 
-from game import Game
+from DATA.game import Game
 
-from audio.soundPlayer import Sound
+from DATA.audio.soundPlayer import Sound
 
 import threading
 
@@ -18,8 +19,8 @@ pg.display.set_caption("WWTBAM")
 clock = pg.Clock()
 FPS = 60
 
-from GUI.assets import *
-from GUI.widget import Button, Toggle
+from DATA.GUI.assets import *
+from DATA.GUI.widget import Button, Toggle
                 
 def checkWidgets():
     for w in widgets:
