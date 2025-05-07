@@ -204,10 +204,10 @@ def usedCallFriend():
         popUpType = "CF"
         selectedStatesLL[3] = True
 
-LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience ,hoverLL)
-LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost     ,hoverLL)
-LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty  ,hoverLL) 
-LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend  ,hoverLL)
+LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience, hoverLL)
+LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost,     hoverLL)
+LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty,  hoverLL) 
+LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend,  hoverLL)
 
     #popUp
 def closePopUp():
@@ -302,10 +302,11 @@ def drawPopups(popUpType):
             drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False)
 
             if popUpType == "AA": #ask audience
-                drawText(FONT0, "Ask the Audience", centerX-popUp.get_size()[0]/2+225, 98, False)
+                drawText(FONT0, "Ask the Audience", screen.get_width()/2, 98, False)
+                drawText(FONT1, f"A: {propabilities[0]}%        B: {propabilities[1]}%        C: {propabilities[2]}%        D: {propabilities[3]}%", screen.get_width()/2, 300, False)
                 for i, p in enumerate(propabilities):
-                    drawText(FONT1, f"{p}%", centerX-popUp.get_size()[0]/2+i*40, 330, False)
-                selectedStatesLL[0] = True
+                    pg.draw.rect(screen, (60, 120, 215), (250+i*111, 190+int(90-2.5*p), 70, int(p*2.5)))
+                    selectedStatesLL[0] = True
 
             if popUpType == "AH": #ask host
                 drawText(FONT0, "Ask the Host", centerX-popUp.get_size()[0]/2+225, 98, False)
