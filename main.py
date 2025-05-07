@@ -1,7 +1,6 @@
 import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
-from os import system
 
 from DATA.game import Game
 
