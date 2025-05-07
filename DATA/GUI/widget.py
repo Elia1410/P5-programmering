@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class Widget: #superclass
     def __init__(self, width, height, posX, posY, func, widgetImage, hoverImage):
         self.width = width

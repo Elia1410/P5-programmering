@@ -1,4 +1,6 @@
 import pygame as pg
+from os import chdir, getcwd
+chdir(getcwd() + "/GUI")
 
 # png billeder
 bgImg = pg.image.load("pngs/background.png").convert()
@@ -61,3 +63,5 @@ levels=[FONT1.render("1   $ 100", True, "orange"),
         FONT1.render("13  $ 250.000", True, "orange"),
         FONT1.render("14  $ 500.000", True, "orange"),
         FONT1.render("15  $ 1.000.000", True, "white")]
+
+chdir("..")

@@ -6,7 +6,7 @@ class Game:
         self.__level = 0
         self.__previousQuestions = [[], [], []]
         
-        with open("output2.json", "r", encoding="utf8") as file:
+        with open("scraper/output2.json", "r", encoding="utf8") as file:
             self.__questionData = json.load(file)
 
         self.__currentQuestion = self.__newQuestion()

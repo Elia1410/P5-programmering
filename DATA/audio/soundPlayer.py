@@ -4,16 +4,18 @@ import pyttsx3
 class Sound:
     """Objekt til styring af lydeffekter, musik og TTS (Text To Speech)"""
     def __init__(self):
+
+
         # lydeffekter:
-        self.effectButton = pg.mixer.Sound('sounds/button.wav')
-        self.effectCorrect = pg.mixer.Sound('sounds/correct.wav')
-        self.effectWrong = pg.mixer.Sound('sounds/wrong.wav')
-        self.effectStartGame = pg.mixer.Sound('sounds/startGame.wav')
-        self.effectWin = pg.mixer.Sound('sounds/win.wav')
+        self.effectButton = pg.mixer.Sound('audio/sounds/button.wav')
+        self.effectCorrect = pg.mixer.Sound('audio/sounds/correct.wav')
+        self.effectWrong = pg.mixer.Sound('audio/sounds/wrong.wav')
+        self.effectStartGame = pg.mixer.Sound('audio/sounds/startGame.wav')
+        self.effectWin = pg.mixer.Sound('audio/sounds/win.wav')
     
         # musik:
-        self.mainTheme = 'sounds/mainTheme.mp3'
-        self.suspenseTheme = 'sounds/suspense.mp3'
+        self.mainTheme = 'audio/sounds/mainTheme.mp3'
+        self.suspenseTheme = 'audio/sounds/suspense.mp3'
         self.currectTrack = None
 
         # lydstyrke
@@ -88,7 +90,7 @@ class Sound:
                 pass
             self.engine.say(text)
             self.engine.runAndWait()
-        
+
 
 # test af lydsystem
 if __name__ == "__main__":
@@ -125,5 +127,3 @@ if __name__ == "__main__":
             soundsystem.setVolume(1)
         if keys[pg.K_k]:
             soundsystem.tts("Hello World")
-
-        
