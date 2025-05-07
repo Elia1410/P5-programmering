@@ -1,5 +1,5 @@
 import json
-from random import randint, random, choice, choices
+from random import randint, random, choice
 
 class Game:
     def __init__(self):

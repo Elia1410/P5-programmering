@@ -74,7 +74,7 @@ class Sound:
             pg.mixer.music.set_volume(vol*self.mainThemeVolume)
         else:
             pg.mixer.music.set_volume(vol*self.suspenseThemeVolume)
-        self.effectCorrect.set_volume(vol*self.effectButtonVolume)
+        self.effectButton.set_volume(vol*self.effectButtonVolume)
         self.effectCorrect.set_volume(vol*self.effectCorrectVolume)
         self.effectWrong.set_volume(vol*self.effectWrongVolume)
         self.effectStartGame.set_volume(vol*self.effectStartGameVolume)
