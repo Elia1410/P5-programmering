@@ -1,11 +1,10 @@
 import pygame as pg
 
-
-class Widget: #superclass
-    """Superklasse til udvikling af subklasse widgets, som f.eks. Button eller Toggle.
-    """    
+class Widget:
+    """Superklasse/Overklasse til udvikling af subklasse widgets, som f.eks. Button eller Toggle.
+    """
     def __init__(self, width, height, posX, posY, func, widgetImage, hoverImage):
-        """Initialisering af widget arguments.
+        """Initialisering af widget parametre.
         Args:
             width (_int_): Bredde af widget.
             height (_int_): Højde af widget.
@@ -23,24 +22,24 @@ class Widget: #superclass
         self.func = func
         self.widgetImage = widgetImage
         self.hoverImage = hoverImage
-        self.justPressed = False
+        self.justPressed = False # Boolsk variabel til at sikre at widgets kun trykkes på en gang
 
     def drawEdges(self, screen):
         """Tegner et kryds over widgettens interagerbare område, bruges hvis der intet widget-billede er tegnet endnu.
         Args:
             screen (_pygame.Surface_): Den surface som krydset tegnes på, typisk en window-surface.
         """        
-        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)
-        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)
+        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3) # Linje fra top-venstre til bund-højre
+        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3) # Linje fra bund-venstre til top-højre
 
 #####################################################################################################################################
 
-class Button(Widget): # subclass of Widget for buttons
-    """En subklasse til opretning af knapper/buttons, der bruger billeder til udseende.
+class Button(Widget):
+    """En underklasse til opretning af knapper/buttons, der bruger billeder til udseende.
     Args:
-        Widget (_class_): Superklassen som Button klassen arver argumenter og metoder fra.
+        Widget (_class_): Superklassen som Button klassen arver argumenter(klasse parametre) og metoder fra.
     """    
-    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None,):
+    def __init__(self, width, height, posX, posY, func, widgetImage = None, hoverImage = None,): 
         super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
 
     def draw(self, screen: pg.Surface):
@@ -58,11 +57,11 @@ class Button(Widget): # subclass of Widget for buttons
         Returns:
             bool: Sandt/falsk om musen er over knappen.
         """        
-        isHoverX = pg.mouse.get_pos()[0] in list(range(int(self.posX), int(self.posX+self.width)))
-        isHoverY = pg.mouse.get_pos()[1] in list(range(int(self.posY), int(self.posY+self.height)))
+        isHoverX = pg.mouse.get_pos()[0] in list(range(int(self.posX), int(self.posX+self.width)))  # Tjeker om musen er inden for knappens område på x-aksen
+        isHoverY = pg.mouse.get_pos()[1] in list(range(int(self.posY), int(self.posY+self.height))) # Tjeker om musen er inden for knappens område på y-aksen
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            if self.hoverImage != None:
+            if self.hoverImage != None: # Hvis der er et hoverbillede tilhørende knappen, tegnes det på skærmen
                 screen.blit(self.hoverImage, (self.posX, self.posY))
             return self.isHover
     
@@ -71,12 +70,11 @@ class Button(Widget): # subclass of Widget for buttons
         Args:
             screen (_pygame.Surface_): Den surface som knappen er tegnet på, typisk en window-surface.
         """        
-        if self.checkHover(screen) == True:
+        if self.checkHover(screen) == True: # Kun hvis musen er over knappen, kan den trykkes på
             pg.event.get()
-            if pg.mouse.get_pressed()[0]:
-                if not self.justPressed:
-                    self.func()
-
+            if pg.mouse.get_pressed()[0]: # Indexet [0] refferer til venstre-klik på musen
+                if not self.justPressed: 
+                    self.func()           # Funktionen kaldes kun en gang per klik, da justPressed boolen opdateres og forhindre næste iteration.
                     self.justPressed = True
             else: 
                 self.justPressed = False
@@ -84,9 +82,9 @@ class Button(Widget): # subclass of Widget for buttons
 #####################################################################################################################################
 
 class Toggle(Widget): # subklasse widget for toggles
-    """En subklasse til opretning af toggles/kontakter, der bruger billeder til udseende.
+    """En underklasse til opretning af toggles/kontakter, der bruger billeder til udseende.
     Args:
-        Widget (_class_): Superklassen som Toggle klassen arver argumenter og metoder fra.
+        Widget (_class_): Superklassen som Toggle klassen arver argumenter(klasse parametre) og metoder fra.
     """    
     def __init__(self, width, height, posX, posY, state, widgetImages = None, hoverImages = None): 
         super().__init__(width, height, posX, posY, func=None, widgetImage=None, hoverImage=None)
@@ -101,9 +99,9 @@ class Toggle(Widget): # subklasse widget for toggles
         """        
         if self.toggleImages != None:
             if self.state == True:
-                screen.blit(self.toggleImages[0], (self.posX, self.posY))
+                screen.blit(self.toggleImages[0], (self.posX, self.posY)) # Tegner billedet til tilstand 1
             else:
-                screen.blit(self.toggleImages[1], (self.posX, self.posY))
+                screen.blit(self.toggleImages[1], (self.posX, self.posY)) # Tegner billedet til tilstand 2
     
     def checkHover(self, screen: pg.Surface):
         """Tjekker om musen er over knappen og tegner det hoverImage der hører til kontaktens tilstand, når det er sandt.
@@ -112,15 +110,15 @@ class Toggle(Widget): # subklasse widget for toggles
         Returns:
             bool: Sandt/falsk om musen er over kontakten.
         """          
-        isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))
-        isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height))
+        isHoverX = pg.mouse.get_pos()[0] in list(range(self.posX, self.posX+self.width))  # Tjeker om musen er inden for knappens område på x-aksen
+        isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height)) # Tjeker om musen er inden for knappens område på y-aksen
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            if self.hoverImages != None:
-                if self.state == True:
-                    screen.blit(self.hoverImages[0], (self.posX, self.posY))
+            if self.hoverImages != None: # Hvis der er et hoverbillede tilhørende knappen, tegnes det på skærmen
+                if self.state == True: 
+                    screen.blit(self.hoverImages[0], (self.posX, self.posY)) # Billede til tilstand 1
                 else:
-                    screen.blit(self.hoverImages[1], (self.posX, self.posY))
+                    screen.blit(self.hoverImages[1], (self.posX, self.posY)) # Billede til tilstand 1
             return self.isHover
         
     def checkPressed(self, screen: pg.Surface):
@@ -128,14 +126,14 @@ class Toggle(Widget): # subklasse widget for toggles
         Args:
             screen (_pygame.Surface_): Den surface som kontakten er tegnet på, typisk en window-surface.
         """     
-        if self.checkHover(screen) == True:
+        if self.checkHover(screen) == True: # Kun hvis musen er over knappen, kan den trykkes på
             pg.event.get()
-            if pg.mouse.get_pressed()[0]:
-                if not self.justPressed:
-                    if self.state == True:
-                        self.state = False
+            if pg.mouse.get_pressed()[0]: # Indexet [0] refferer til venstre-klik på musen
+                if not self.justPressed:  # tilstanden ændres kun en gang per klik, da justPressed boolen opdateres og forhindre næste iteration.
+                    if self.state == True:        
+                        self.state = False  # Hvis kontakten er i tilstand 1, ændres den til 2, (f.eks. on)
                     else:
                         self.state = True
-                    self.justPressed = True
+                    self.justPressed = True # Hvis kontakten er i tilstand 2, ændres den til 1, (f.eks. off)
             else: 
                 self.justPressed = False
