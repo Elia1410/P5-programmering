@@ -4,6 +4,7 @@ from random import randint, random, choice
 import sys
 import os
 
+# hent den aktuelle sti
 try:
     PATH = sys._MEIPASS  # PyInstaller 
 except AttributeError:
@@ -56,7 +57,7 @@ class Game:
         while True:
             qIndex = randint(0, len(self.__questionData[str(qLevel+1)])-1) # random spørgsmålindeks
             if not qIndex in self.__previousQuestions[qLevel]:
-                self.__previousQuestions[qLevel].append(qIndex)
+                self.__previousQuestions[qLevel].append(qIndex) # gem spørgsmål til allerede-brugte spørgsmål
                 break
         return self.__questionData[str(qLevel+1)][qIndex]
     
@@ -109,7 +110,13 @@ class Game:
     def LLaskHost(self):
         """ Life line: Spørg værten
 
+        Simulerer chancen for at værten "kender" svaret:
+
+        P1 = 42% - (2% * level): chancen for at værten med 100% sikkerhed kan svaret
         
+        P2 = 75% - P1: chancen for at værten måske kan svaret (50% sikker)
+
+        P3 = 100% - P2: chancen for at værten ikke kan svaret
 
         Returns:
             Str: Værtens svar
@@ -119,11 +126,11 @@ class Game:
         incorrect = list(question["options"])
         incorrect.pop(question["answer"])
 
-        hostKnowledge = random()
+        hostKnowledge = random() # tilfældigt tal der betemmer hvor meget værten "ved"
 
-        if hostKnowledge > 0.58+0.02*self.getLevel():
+        if hostKnowledge > 0.58+0.02*self.getLevel(): # > 58% + ( 2% * niveau ) 
             return f"I'm most certain the correct answer is '{answer}'."
-        elif hostKnowledge > 0.25:
+        elif hostKnowledge > 0.25: # > 25%
             if random() > 0.5: return f"I'm pretty sure the correct answer is '{answer}'."
             else: return f"I'm pretty sure the correct answer is '{choice(incorrect)}'."
         else:
@@ -131,6 +138,13 @@ class Game:
             
 
     def LL5050(self):
+        """ Life line: 50:50
+
+        Udelukker 2 af de forkerte svarmuligheder
+
+        Returns:
+            List: indeks af svar der udelukkes 
+        """
         question = self.getQuestion()
         incorrect = [0, 1, 2, 3]
         incorrect.pop(question["answer"])
@@ -141,21 +155,36 @@ class Game:
     
 
     def LLcallFriend(self):
+        """ Life line: Ring til en ven
+
+        Simulerer chancen for at vennen "kender" svaret:
+
+        P1 = 55% - (2% * level): chancen for at vennen med 100% sikkerhed kan svaret
+        
+        P2 = 80% - P1: chancen for at vennen måske kan svaret (50% sikker)
+
+        P3 = 100% - P2: chancen for at vennen ikke kan svaret
+
+        Returns:
+            Str: Vennens svar
+        """
+
         question = self.getQuestion()
         answer = question["options"][question["answer"]]
         incorrect = list(question["options"])
         incorrect.pop(question["answer"])
 
-        hostKnowledge = random()
+        friendKnowledge = random() # tilfældigt tal der betemmer hvor meget vennen "ved"
 
-        if hostKnowledge > 0.45+0.02*self.getLevel():
+        if friendKnowledge > 0.45+0.02*self.getLevel():
             return f"It's absolutely '{answer}'. I'm certain."
-        elif hostKnowledge > 0.20:
+        elif friendKnowledge > 0.20:
             if random() > 0.5: return f"I think it's '{answer}' but i can't be sure"
             else: return f"I think it's '{choice(incorrect)}' but i can't be sure."
         else:
             return "I'm sorry, i just have no idea. Good luck."
 
+# test af Game-objektets funktionalitet
 if __name__ == "__main__":
     game = Game()
     while True:
