@@ -10,33 +10,68 @@ except AttributeError:
     PATH = os.path.abspath(".")
 
 class Game:
+    """Klasse til spillogik"""
     def __init__(self):
-        self.__level = 0
-        self.__previousQuestions = [[], [], []]
+        """Initialiser Game-objekt"""
         
+        self.__level = 0 # niveau af pengesum
+        self.__previousQuestions = [[], [], []] # lister af allerde-brugte spørgsmål
+        
+        # importer alle spørgsmål fra JSON fil 
         with open(os.path.join(PATH,"DATA/output2.json"), "r", encoding="utf8") as file:
             self.__questionData = json.load(file)
 
         self.__currentQuestion = self.__newQuestion()
 
     def getLevel(self):
+        """ Få det nuværende niveau
+
+        Returns:
+            int: niveau af nuværende pengesum i spillet
+        """
         return self.__level
     
     def nextLevel(self):
+        """ Sætter spillet til næste spørgsmål og inkrementer niveau"""
         if self.__level < 14:
             self.__level += 1
         self.__currentQuestion = self.__newQuestion()
     
     def __newQuestion(self):
-        qLevel = int(self.getLevel()/5)
+        """Hent et nyt spørgsmål fra questionData.
+
+        Returns:
+            Dict: Et spørgsmål i følgende format:
+
+                Question = {
+                    "question": str,
+                    "options": [str, str, str, str],
+                    "answer": int
+                }
+        """
+
+        qLevel = int(self.getLevel()/5) # omdan niveau (0-14) til spørgsmålsniveau (1-3)
+
+        # repeter indtil et nyt spørgsmål findes som ikke er i self.__previousQuestions
         while True:
-            qIndex = randint(0, len(self.__questionData[str(qLevel+1)])-1)
+            qIndex = randint(0, len(self.__questionData[str(qLevel+1)])-1) # random spørgsmålindeks
             if not qIndex in self.__previousQuestions[qLevel]:
                 self.__previousQuestions[qLevel].append(qIndex)
                 break
         return self.__questionData[str(qLevel+1)][qIndex]
     
     def getQuestion(self):
+        """Hent et nyt spørgsmål fra questionData og formater korrekt.
+
+        Returns:
+            Dict: Et spørgsmål i følgende format:
+
+                Question = {
+                    "question": str,
+                    "options": [str, str, str, str],
+                    "answer": int
+                }
+        """
         return {
             "question": self.__currentQuestion["question"].replace("&amp;", "&"),
             "options": [option.replace("&amp;", "&") for option in self.__currentQuestion["options"]],
@@ -44,10 +79,20 @@ class Game:
         }
     
     def gameOver(self):
+        """reset niveau og få nyt spørgsmål"""
         self.__level = 0
         self.__currentQuestion = self.__newQuestion()
 
     def LLaskAudience(self):
+        """Life line: Spørg publikum
+
+        Simmulerer publikumsvar, hvor jo højere niveau er, 
+
+        jo mindre sikkerhed er der i det korrekte svar
+
+        Returns:
+            List: liste af "publikums" valg i procenter 0-100% (int)
+        """
         correctIndex = self.getQuestion()["answer"]
         currLevel = self.getLevel()
         correctAnswerProb = (15-currLevel)*2
@@ -62,6 +107,13 @@ class Game:
         return probabilities
 
     def LLaskHost(self):
+        """ Life line: Spørg værten
+
+        
+
+        Returns:
+            Str: Værtens svar
+        """
         question = self.getQuestion()
         answer = question["options"][question["answer"]]
         incorrect = list(question["options"])
