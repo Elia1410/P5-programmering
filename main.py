@@ -6,7 +6,12 @@ from DATA.game import Game
 
 from DATA.audio.soundPlayer import Sound
 
+from DATA.GUI.assets import *
+from DATA.GUI.widget import Button, Toggle
+
 import threading
+
+#--------------------------------------------------------------------------------------------------------------------------------------#
 
 pg.init()
 
@@ -18,65 +23,99 @@ pg.display.set_caption("WWTBAM")
 clock = pg.Clock()
 FPS = 60
 
-from DATA.GUI.assets import *
-from DATA.GUI.widget import Button, Toggle
-                
-def checkWidgets():
-    for w in widgets:
-        w.checkPressed(screen)
+#--------------------------------------------------------------------------------------------------------------------------------------#
+# widgets: ----------------------------------------------------------------------------------------------------------------------------#
 
-def drawWidgets():
-    for w in widgets:
-        w.draw(screen)
-
-#buttons
-    #anwser buttons 
+    # buttons/knapper
+        # svarmulighed-knapper
+            # tryk/interager funktioner
 def selectedA():
-    if popUpShown == False:
-        selectedStates[0] = True
-        sound.playSoundButton()
+    """Funktion der kaldes når svarmulighed A vælges/trykkes på.
+    """    
+    if popUpShown == False:         # knappen virker ikke hvis der er et popup tilstede
+        selectedStates[0] = True    # refferer til sektionen: "state variabler til buttons/knapper"
+        sound.playSoundButton()     # spiller en lydeffekt når knappen trykkes på
+
 def selectedB():
-    if popUpShown == False:
+    """Funktion der kaldes når svarmulighed B vælges/trykkes på.
+    """   
+    if popUpShown == False:         # refferer til "selectedA()"
         selectedStates[1] = True
         sound.playSoundButton()
+
 def selectedC():
-    if popUpShown == False:
+    """Funktion der kaldes når svarmulighed C vælges/trykkes på.
+    """   
+    if popUpShown == False:         # refferer til "selectedA()"
         selectedStates[2] = True
         sound.playSoundButton()
+
 def selectedD():
-    if popUpShown == False:
+    """Funktion der kaldes når svarmulighed D vælges/trykkes på.
+    """   
+    if popUpShown == False:         # refferer til "selectedA()"
         selectedStates[3] = True
         sound.playSoundButton()
 
+            # definationer af selve knapperne
 anwserBtnA = Button(433-93,  632-593, destA[0], destA[1], selectedA, hoverImage=hoverAnwser)
 anwserBtnC = Button(433-93,  682-643, destC[0], destC[1], selectedC, hoverImage=hoverAnwser)
 anwserBtnB = Button(800-460, 632-593, destB[0], destB[1], selectedB, hoverImage=hoverAnwser)
 anwserBtnD = Button(800-460, 682-643, destD[0], destD[1], selectedD, hoverImage=hoverAnwser)
 
-    #lifelines
+
+        # lifeline-knapper
+            # tryk/interager funktioner
 def usedAskAudience():
+    """Funktionen der kaldes når lifeline-knappen "Ask the audience" trykkes på.
+    
+    Åbner et popup med "publikummets" svar, vist som et søjle diagram:
+
+    Eksempel:
+    .
+    A: 51% | B: 16% | C: 21% | D: 12%
+    """    
     global popUpType, popUpShown, propabilities
-    if popUpShown == False and selectedStatesLL[0] == False:
-        propabilities = game.LLaskAudience()
-        popUpShown = True
-        popUpType = "AA"
-        selectedStatesLL[0] = True
+    if popUpShown == False and selectedStatesLL[0] == False: # funktionen gør kun noget, hvis livslinjen ikke brugt før og et popup ikke er tilstede
+        propabilities = game.LLaskAudience() # selve udregningen af svarfordelingen, som skal blittes/tegnes på det kommende popup
+        popUpShown = True   # klargører åbningen af et nyt popup
+        popUpType = "AA"    
+        selectedStatesLL[0] = True # knappens tilstand sættes til "brugt", så den virker mere
         sound.playSoundButton()
+
 def usedAskHost():
+    """Funktionen der kaldes når lifeline-knappen "Ask the host" trykkes på.
+    
+    Åbner et popup med "værtens" (mulige) gæt/svar til spørgsmålet:
+
+    Sandsyneligheden for, at værten kender svaret, bliver mindre jo længere man når i spillet.
+    """     
     global popUpType, popUpShown, hostAnswer
     if popUpShown == False and selectedStatesLL[1] == False:
-        hostAnswer = game.LLaskHost()
+        hostAnswer = game.LLaskHost() # teksten, som skal blittes/tegnes på det kommende popup
         popUpShown = True
         popUpType = "AH"
         selectedStatesLL[1] = True
         sound.playSoundButton()
-def used5050():
+
+def used5050(): # bemærk: åbner IKKE et popup som de andre livslinjer
+    """Funktionen der kaldes når lifeline-knappen "50/50" trykkes på.
+    
+    Fjerner/udelukker 2 forkerte svarmuligheder.
+    """   
     if popUpShown == False:
         if selectedStatesLL[2] == False:
             game.LL5050()
             selectedStatesLL[2] = True
             sound.playSoundButton()
+
 def usedCallFriend():
+    """Funktionen der kaldes når lifeline-knappen "Call a friend" trykkes på.
+    
+    Åbner et popup med "vennens" (mulige) gæt/svar til spørgsmålet:
+
+    Sandsyneligheden for, at vennen kender svaret, bliver mindre jo længere man når i spillet.
+    """     
     global popUpType, popUpShown, friendAnswer
     if popUpShown == False and selectedStatesLL[3] == False:
         friendAnswer = game.LLcallFriend()
@@ -85,58 +124,95 @@ def usedCallFriend():
         selectedStatesLL[3] = True
         sound.playSoundButton()
 
+            # definationer af selve knapperne
 LLaskAudienceBtn = Button(85, 52, destAskAudience[0], destAskAudience[1], usedAskAudience, askAudience, hoverLL)
 LLaskHostBtn     = Button(85, 52, destAskHost[0],     destAskHost[1],     usedAskHost,     askHost,     hoverLL)
 LL5050Btn        = Button(85, 52, dest5050[0],        dest5050[1],        used5050,        fiftyFifty,  hoverLL) 
 LLcallFriendBtn  = Button(85, 52, destCallFriend[0],  destCallFriend[1],  usedCallFriend,  callFriend,  hoverLL)
 
-    #popUp
+
+        # popup-knappen
+            # tryk/interager funktion
 def closePopUp():
+    """Den funktion som kaldes når popup-knappen trykkes på.
+
+    Lukker det popup som er åbent og fortsætter spillet.
+    """    
     global popUpShown
     popUpShown = False
     sound.playSoundButton()
 
+            # definationen af selve knappen
 closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePopUp, closeContinue) 
 
-    #sound
-soundTgl = Toggle(83, 74, 30, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
 
-# liste af alle widgets
-widgets = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn, soundTgl]
-
-
-#state variables for buttons
-    #anwsers
-selectedStates = [False, False, False, False]
+        # state variabler til buttons/knapper
+            # anwsers/svarmugligheder
+selectedStates = [False, False, False, False] # index [0]: A, [1]: B, osv.
 correctStates = [False, False, False, False]
-    #lifelines
-selectedStatesLL = [False, False, False, False]
+
+            # lifelines
+selectedStatesLL = [False, False, False, False] # index [0]: "AskAudience", [1]: "AskHost", [2]: "5050", [3]: "CallFriend"
 usedStatesLL = [False, False, False, False]
 
+            # funktion til tegning af states på tilhørende knapper
 def drawStates():
-    for i, state in enumerate(selectedStates):
-        if state == True:
+    """Tegner/blitter tilhørende og relevante tilstands-billeder på widgets.
+    """    
+    for i, state in enumerate(selectedStates): # blitter et gennemsigtigt gult billede på den valgte svarmulighed, hvis der er en
+        if state == True:                      # selectedStates[0]=True betyder at svarmulighed 1 er blevet valgt
             screen.blit(selectedAnwser, destinations[i])
 
-    for i, state in enumerate(correctStates):
-        if state == True:
+    for i, state in enumerate(correctStates):  # blitter et gennemsigtigt grønt billede på den korrekte svarmulighed
+        if state == True:                      # correctStates[0]=True betyder at svarmulighed 1 er det korrekte svar
             screen.blit(correctAnwser, destinations[i])
 
-    for i, state in enumerate(selectedStatesLL):
+    for i, state in enumerate(selectedStatesLL): # blitter et gennemsigtigt sort billede på de brugte lifeline-knapper, hvis der er nogen
         if state == True:
             screen.blit(usedLL, destinationsLL[i])
 
+
+    # Toggle/kontakter
+        # definationen af lyd-kontakt/sound-toggle
+soundTgl = Toggle(83, 74, 30, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
+
+
+    # håndtering af widgets
+        # liste af alle widgets
+widgets = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn, soundTgl]
+
+        # funktioner til håndtering af widgets
+def checkWidgets():
+    """Kalder "checkPresed" funktionen på alle widgets.
+
+    Tjekker for alle widgets om de er blevet trykket på.
+    """
+    for w in widgets:
+        w.checkPressed(screen)
+
+#--------------------------------------------------------------------------------------------------------------------------------------#
+# funktioner til tegning/blit på vinduet: ---------------------------------------------------------------------------------------------#
+
+def drawWidgets():
+    """Kalder "drawWidgets" funktionen på alle widgets.
+
+    Tegner alle widgets på vinduet (vha. deres tilhørende billeder).
+    """
+    for w in widgets:
+        w.draw(screen)
+
 def drawLevels():
-    #blit inidicator
+    """Tegner niveauerne i det øverste højre hjørne af vinduet.
+    """
+    # blit inidicator
     screen.blit(levelIndicator, (730, 360-(game.getLevel()*25)))
-    #blit levels
+    # blit levels
     for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
 
-# til rendering af tekst på skærmen
+
 def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen = 80, color="white"):
-    """
-    Tegner tekst på skærmen, centreret på (x, y) skærmposition
+    """Tegner tekst på vinduet, centreret på en (x, y) skærmposition.
     """
     if len(text) > wrapLen and wrap == True:
         # "wrap" teksten, så en ny linje indsættes hvis teksten er længere end  wrapLen
@@ -154,34 +230,53 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
     screen.blit(questionText, questionRect)
 
 
-popUpShown = False #options are 0:main and 1:popup
-popUpType = None
+popUpShown = False  # bestemmer om der skal tegnes et popup eller ej
+popUpType = None    # Typen af popup, enten "AA", "AH" eller "CF"
 
 def drawPopups(popUpType):
+    """Tegner popups på vinduet, hvis popUpShown == True.
+
+    Args:
+        popUpType (_string_): Kan enten være "AA", "AH" eller "CF"
+
+    "AA" = Ask the audience
+
+    "AH" = Ask the host
+
+    "CF" = Call a friend
+    """
     if popUpType != None:
         global popUpShown, propabilities
         if popUpShown == True:
-            screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))
-            closePopUpBtn.draw(screen)
-            closePopUpBtn.checkPressed(screen)
-            drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False)
+            screen.blit(popUp, (centerX-popUp.get_size()[0]/2+5, 85))                       # tegner først popup boxen
+            closePopUpBtn.draw(screen)                                                      # tegner popup-knappen
+            closePopUpBtn.checkPressed(screen)                                              # tjeker om knappen er trykket på
+            drawText(FONT1, "Continue Game", centerX-popUp.get_size()[0]/2+225, 352, False) # tegner teksten på knappen
 
-            if popUpType == "AA": #ask audience
+            if popUpType == "AA": # ask audience
+                # tegner lifelife tekst i popup titel og box
                 drawText(FONT0, "Ask the Audience", screen.get_width()/2, 98, False)
                 drawText(FONT1, f"A: {propabilities[0]}%        B: {propabilities[1]}%        C: {propabilities[2]}%        D: {propabilities[3]}%", screen.get_width()/2, 300, False)
+                # tegner sølje-diagram ud fra probabilites
                 for i, p in enumerate(propabilities):
                     pg.draw.rect(screen, (60, 120, 215), (250+i*111, 190+int(90-2.5*p), 70, int(p*2.5)))
-                    selectedStatesLL[0] = True
+                    selectedStatesLL[0] = True  # gører denne lifeline brugt (kan ikke bruges igen)
 
-            if popUpType == "AH": #ask host
+            if popUpType == "AH": # ask host
+                # tegner lifelife tekst i popup titel og box
                 drawText(FONT0, "Ask the Host", centerX-popUp.get_size()[0]/2+225, 98, False)
                 drawText(FONT0, hostAnswer, centerX-popUp.get_size()[0]/2+225, 190, True, 40)
-                selectedStatesLL[1] = True
+                selectedStatesLL[1] = True  # gører denne lifeline brugt (kan ikke bruges igen)
                 
-            if popUpType == "CF": #call friend
-                drawText(FONT0, "Call a Friend", centerX-popUp.get_size()[0]/2+225, 98, False)
+            if popUpType == "CF": # call friend
+                # tegner lifelife tekst i popup titel og box
+                drawText(FONT0, "Call a Friend", centerX-popUp.get_size()[0]/2+225, 98, False) 
                 drawText(FONT0, friendAnswer, centerX-popUp.get_size()[0]/2+225, 190, True, 40)
-                selectedStatesLL[3] = True
+                selectedStatesLL[3] = True  # gører denne lifeline brugt (kan ikke bruges igen)
+
+#--------------------------------------------------------------------------------------------------------------------------------------#
+# hovedløkke / spil-løkke: ------------------------------------------------------------------------------------------------------------#
+ 
 
 # initialiser objekt til spil-logik
 game = Game()

@@ -43,7 +43,7 @@ class Button(Widget):
         super().__init__(width, height, posX, posY, func, widgetImage, hoverImage)
 
     def draw(self, screen: pg.Surface):
-        """Tegner/renderer widgetImage billedet til knappen
+        """Tegner/blitter widgetImage billedet til knappen
         Args:
             screen (_pygame.Surface_): Den surface som billedet tegnes på, typisk en window-surface.
         """
@@ -93,7 +93,7 @@ class Toggle(Widget): # subklasse widget for toggles
         self.hoverImages = hoverImages   # dette er skyldet at Toggle widgetten har 2 tilstande, hvor en ordinær Widget kun har 1.
 
     def draw(self, screen: pg.Surface):
-        """Tegner/renderer det widgetImage billede der hører til kontaktens nuværende tilstand.
+        """Tegner/blitter det widgetImage billede der hører til kontaktens nuværende tilstand.
         Args:
             screen (_pygame.Surface_): Den surface som kontakten er tegnes på, typisk en window-surface.
         """        
