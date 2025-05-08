@@ -1,20 +1,29 @@
 import pygame as pg
-import threading
-
 import pyttsx3
 
+import sys
+import os
+
+try:
+    PATH = sys._MEIPASS  # PyInstaller 
+except AttributeError:
+    PATH = os.path.abspath(".")
+
 class Sound:
+    """Objekt til styring af lydeffekter, musik og TTS (Text To Speech)"""
     def __init__(self):
+        
+
         # lydeffekter:
-        self.effectButton = pg.mixer.Sound('sounds/button.wav')
-        self.effectCorrect = pg.mixer.Sound('sounds/correct.wav')
-        self.effectWrong = pg.mixer.Sound('sounds/wrong.wav')
-        self.effectStartGame = pg.mixer.Sound('sounds/startGame.wav')
-        self.effectWin = pg.mixer.Sound('sounds/win.wav')
+        self.effectButton = pg.mixer.Sound(os.path.join(PATH,'DATA/audio/sounds/button.wav'))
+        self.effectCorrect = pg.mixer.Sound(os.path.join(PATH,'DATA/audio/sounds/correct.wav'))
+        self.effectWrong = pg.mixer.Sound(os.path.join(PATH,'DATA/audio/sounds/wrong.wav'))
+        self.effectStartGame = pg.mixer.Sound(os.path.join(PATH,'DATA/audio/sounds/startGame.wav'))
+        self.effectWin = pg.mixer.Sound(os.path.join(PATH,'DATA/audio/sounds/win.wav'))
     
         # musik:
-        self.mainTheme = 'sounds/mainTheme.mp3'
-        self.suspenseTheme = 'sounds/suspense.mp3'
+        self.mainTheme = os.path.join(PATH,'DATA/audio/sounds/mainTheme.mp3')
+        self.suspenseTheme = os.path.join(PATH,'DATA/audio/sounds/suspense.mp3')
         self.currectTrack = None
 
         # lydstyrke
@@ -75,7 +84,7 @@ class Sound:
             pg.mixer.music.set_volume(vol*self.mainThemeVolume)
         else:
             pg.mixer.music.set_volume(vol*self.suspenseThemeVolume)
-        self.effectCorrect.set_volume(vol*self.effectButtonVolume)
+        self.effectButton.set_volume(vol*self.effectButtonVolume)
         self.effectCorrect.set_volume(vol*self.effectCorrectVolume)
         self.effectWrong.set_volume(vol*self.effectWrongVolume)
         self.effectStartGame.set_volume(vol*self.effectStartGameVolume)
@@ -89,9 +98,9 @@ class Sound:
                 pass
             self.engine.say(text)
             self.engine.runAndWait()
-        
 
 
+# test af lydsystem
 if __name__ == "__main__":
 
     pg.init()
@@ -125,7 +134,4 @@ if __name__ == "__main__":
         if keys[pg.K_b]:
             soundsystem.setVolume(1)
         if keys[pg.K_k]:
-            print("hello world")
-            soundsystem.tts("Australian researchers named two of their male palm cockatoos Ringo and Phil Collins after discovering that in order to impress females, the birds will do what?")
-
-        
+            soundsystem.tts("Hello World")

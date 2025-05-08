@@ -1,5 +1,6 @@
 import pygame as pg
 
+
 class Widget: #superclass
     """Superklasse til udvikling af subklasse widgets, som f.eks. Button eller Toggle.
     """    

@@ -2,11 +2,9 @@ import pygame as pg
 import pygame_widgets
 from pygame_widgets.button import Button
 
-from time import sleep
+from DATA.game import Game
 
-from game import Game
-
-from soundPlayer import Sound
+from DATA.audio.soundPlayer import Sound
 
 import threading
 
@@ -20,8 +18,8 @@ pg.display.set_caption("WWTBAM")
 clock = pg.Clock()
 FPS = 60
 
-from assets import *
-from widget import Button, Toggle
+from DATA.GUI.assets import *
+from DATA.GUI.widget import Button, Toggle
                 
 def checkWidgets():
     for w in widgets:
@@ -103,7 +101,7 @@ closePopUpBtn = Button(250, 45, centerX-popUp.get_size()[0]/2+100, 330, closePop
     #sound
 soundTgl = Toggle(83, 74, 30, 30, True, (soundOn, soundOff), (soundOnHover, soundOffHover))
 
-# list of all widgets
+# liste af alle widgets
 widgets = [anwserBtnA, anwserBtnB, anwserBtnC, anwserBtnD, LLaskAudienceBtn, LLaskHostBtn, LL5050Btn, LLcallFriendBtn, soundTgl]
 
 
@@ -135,9 +133,13 @@ def drawLevels():
     for i, level in enumerate(levels):
         screen.blit(level, (740, 360 -(i*25)))
 
-
+# til rendering af tekst på skærmen
 def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen = 80, color="white"):
+    """
+    Tegner tekst på skærmen, centreret på (x, y) skærmposition
+    """
     if len(text) > wrapLen and wrap == True:
+        # "wrap" teksten, så en ny linje indsættes hvis teksten er længere end  wrapLen
         textWrapped = ""
         textSplit = text.split(" ")
         for word in textSplit:
@@ -146,12 +148,12 @@ def drawText(font: pg.font.Font, text: str, x: int, y: int, wrap: bool, wrapLen 
             textWrapped += word + " "
         text = textWrapped
     
+    # blit teksten på skærmen
     questionText = font.render(text, True, color)
-    questionRect = questionText.get_rect(center=(x, y))
+    questionRect = questionText.get_rect(center=(x, y)) # tekst centreres på et Rect objekt
     screen.blit(questionText, questionRect)
 
-# spillogik
-game = Game()
+
 popUpShown = False #options are 0:main and 1:popup
 popUpType = None
 
@@ -181,111 +183,138 @@ def drawPopups(popUpType):
                 drawText(FONT0, friendAnswer, centerX-popUp.get_size()[0]/2+225, 190, True, 40)
                 selectedStatesLL[3] = True
 
-suspenseCooldown = 0
-revealCooldown = 0
+# initialiser objekt til spil-logik
+game = Game()
+
+# værdier til spillogik
+suspenseCooldown = 0 # tid efter valg af svar
+revealCooldown = 0 # tid efter korrekt svar afsløres
 cooldownDelta = FPS*5
 guessWasCorrect = False
 
-# lydsystem
+# init lydsystem
 sound = Sound()
 sound.playMainMusic()
 volume = 1
 volumeDelta = 0.02
 targetVolume = 0.25
 
+# start en seperat cpu-tråd med TTS, så det kører samtidig med spil-løkken
 ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
 ttsThread.start()
 
-
+# start spil-løkke
 running = True
 while running == True:
     events = pg.event.get()
     for event in events:
         if event.type == pg.QUIT:  
-            running = False
+            running = False # afslut spil-løkken
 
+    # tegn baggrundsbillede hver frame
     screen.blit(bgImg, (0,0))
-    drawWidgets()
-    drawStates()
-    drawLevels()
-    drawPopups(popUpType)
 
+    
+    drawWidgets() # tegn widgets i 'widgets'-listen
+    
+    drawStates() # tegn highlight på widgets for hover og selected
+    
+    drawLevels() # tegn niveauer til pengesummen
+
+    drawPopups(popUpType) # hvis et popup vindue er aktivt, tegnes det
+
+    # hent og tegn spørgsmål fra Game objekt
     question = game.getQuestion()["question"]
-    drawText(FONT0, question, 450, 530, True)
+    drawText(FONT0, question, 450, 530, True, 75)
 
+    # hent og tegn svarmuligheder fra Game objekt
     options = game.getQuestion()["options"]
     drawText(FONT2, options[0], 265, 612, False)
     drawText(FONT2, options[1], 635, 612, False)
     drawText(FONT2, options[2], 265, 663, False)
     drawText(FONT2, options[3], 635, 663, False)
 
-    drawText(FONT1, str(game.getLevel()+1), 448, 638, False)
+    # hent og tegn det nuværende niveau fra Game objekt
+    level = str(game.getLevel()+1)
+    drawText(FONT1, level, 448, 638, False)
 
+    # sæt spillets lydafspillerens volume, så det glider op eller ned ift. den ønskede lydstyrke
     sound.setVolume(soundTgl.state*volume)
     if volume < targetVolume:
         volume = min(volume+volumeDelta, targetVolume)
     elif volume > targetVolume:
         volume = max(volume-volumeDelta, targetVolume)
 
+    # tjek om en valgmulighed er valgt. hvis en er valgt, evalueres svaret
     if sum(selectedStates) and suspenseCooldown + revealCooldown == 0:
-        if game.getQuestion()["options"][selectedStates.index(True)] != "":
-            drawStates()
-            pg.display.update()
+        if game.getQuestion()["options"][selectedStates.index(True)] != "": # tjek at valget ikke er negeret af 50:50
             sound.playSuspenseMusic()
-            suspenseCooldown = cooldownDelta
+            suspenseCooldown = cooldownDelta # start cooldownperiode
         else:
-            selectedStates = [False]*4
+            selectedStates = [False]*4 # reset valg
         
-    if suspenseCooldown > 1:
+    if suspenseCooldown > 1: # så længe cooldown > 1, tælles den ned
         suspenseCooldown -= 1
     
+    # når cooldown når 1, afsløres det korrekte svar
     if suspenseCooldown == 1:
         suspenseCooldown -= 1
         sound.pauseMusic()
-        if selectedStates[game.getQuestion()["answer"]]:
+        if selectedStates[game.getQuestion()["answer"]]: # tjek om spillerens valg er det korrekte svar
             correctStates = selectedStates.copy()
             selectedStates = [False]*4
             sound.playSoundCorrect()
-            if game.getLevel() < 14:
+            if game.getLevel() < 14: # tjek om det ikke er det sidste spørgsmål
                 guessWasCorrect = True
                 revealCooldown = cooldownDelta
             else:
                 guessWasCorrect = False
                 sound.playSoundWin()
+                # giv correct-lydeffekten tid til at spille færdig før spillet fortsætter
                 revealCooldown = 26*FPS
         else:
+            # spilleren svarer forkert:
             correctStates[game.getQuestion()["answer"]] = True
             sound.playSoundWrong()
             guessWasCorrect = False
             selectedStatesLL = [False]*4
             revealCooldown = cooldownDelta
     
+    # cooldown-periode til det korrekte svar afsløres
     if revealCooldown > 1:
         revealCooldown -= 1
     
+    # svaret afsløres
     if revealCooldown == 1:
         revealCooldown -= 1
 
+        # evaluer svaret
         if guessWasCorrect:
             game.nextLevel()
         else:
             game.gameOver()
 
+        # reset tilstande for highligt af svar og valg
         correctStates = [False]*4
         selectedStates = [False]*4
 
         sound.playMainMusic()
-        targetVolume = 0.25
+        targetVolume = 0.25 # lydstyrken sænkes
+
+        # ny CPU-tråd startes med TTS der læser næste spørgsmål op
         ttsThread = threading.Thread(target=sound.tts, args=(game.getQuestion()["question"],), daemon=True)
         ttsThread.start()
     
-
+    # så længe ingen cooldown-periode er igang tjekkes widgets for click
     if suspenseCooldown + revealCooldown == 0:
         checkWidgets()
 
+    # hæv lydstyrken hvis TTS ikke er aktiv
     if ttsThread.is_alive() == False:
         targetVolume = 1
 
     pygame_widgets.update(events) 
     pg.display.update()
     clock.tick(FPS)
+
+pg.quit() # luk for spillet

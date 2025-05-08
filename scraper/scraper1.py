@@ -2,32 +2,37 @@ from bs4 import BeautifulSoup as bs
 import requests
 import json
 
-level1Questions = []
-level2Questions = []
-level3Questions = []
+# niveauer til forskellige pengemængder
+level1Questions = [] # x < 1000$
+level2Questions = [] # 1000$ < x < 50000$
+level3Questions = [] # x > 50000$
 
-def addQuestion(question: str, options: list, answer: str, outputDict):
-        outputDict.append({
+def addQuestion(question: str, options: list, answer: str, output: list):
+        """Tilføj en dict med spørgsmål, valgmuligheder og korrekt svar til et niveau"""
+        output.append({
             "question": question,
             "options": options,
             "answer": options.index(answer[3:])
         })
 
 def scrapeURL(url):
+    """ Tager en URL-adresse som argument, og scraper siden for spørgsmål"""
     page = requests.get(url)
 
-    scraper = bs(page.text, "html.parser")
+    scraper = bs(page.text, "html.parser") # opret bs4 scraper
 
-    scraperText = scraper.prettify().split("\n")
-    scraperTextStripped = [line.strip() for line in scraperText]
+    scraperText = scraper.prettify().split("\n") # udvind ren tekst fra scraper
+    scraperTextStripped = [line.strip() for line in scraperText] # fjern ekstra mellemrum fra sidetekst
 
-
+    # iterer over linjer på siden
     for i, line in enumerate(scraperTextStripped):
         try:
+            # gå frem indtil $-tegn findes på siden
             if line[0] == "$":
-
+                # tag spørgsmål
                 question = scraperTextStripped[i+2]
 
+                # tag linjerne med valgmuligheder
                 optionsRaw = scraperTextStripped[i+4] + scraperTextStripped[i+6]
                 
                 a = ""
@@ -37,29 +42,32 @@ def scrapeURL(url):
 
                 cursor = 3
                 
-                while optionsRaw[cursor+3] != ":":
+                # formater linjerne med valgmuligheder
+                while optionsRaw[cursor+3] != ":": # A
                     a += optionsRaw[cursor]
                     cursor += 1
                 cursor += 5
                 
-                while optionsRaw[cursor+1] != ":":
+                while optionsRaw[cursor+1] != ":": # B
                     b += optionsRaw[cursor]
                     cursor += 1
                 cursor += 3
                 
-                while optionsRaw[cursor+3] != ":":
+                while optionsRaw[cursor+3] != ":": # C
                     c += optionsRaw[cursor]
                     cursor += 1
                 cursor += 5
 
-                d = optionsRaw[cursor:]
+                d = optionsRaw[cursor:] # D
 
+                # gå frem i linjer indtil korrekt svar
                 nextLine =  i+8
                 while '<div class="spoiler-body">' not in scraperTextStripped[nextLine]:
                     nextLine += 1
                 
-                answer = scraperTextStripped[nextLine+1]
+                answer = scraperTextStripped[nextLine+1] # tag det korrekte svar
 
+                # tilføj data til det korrekte niveau, baseret på pengesummen
                 money = int(line[1:].replace(",", ""))
                 if money <= 1000:
                     addQuestion(question, [a, b, c, d], answer, level1Questions)
@@ -70,6 +78,7 @@ def scrapeURL(url):
         except:
             pass
 
+# links fundet på www.wwtbambored.com til transkriptioner
 links= [
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=62962',
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=62934',
@@ -191,16 +200,18 @@ links= [
     'https://www.wwtbambored.com/viewtopic.php?f=1&t=55191'
 ]
 
-
+# scrape alle links
 for i, url in enumerate(links):
     scrapeURL(url)
     print(f"scraped: {i+1}")
 
+# formater output
 output = {
     "1": level1Questions,
     "2": level2Questions,
     "3": level3Questions
 }
 
+# gem output som JSON-fil
 with open("output.json", "w", encoding='utf-8') as file:
     json.dump(output, file, indent=4, ensure_ascii=False)

@@ -1,12 +1,20 @@
 import json
-from random import randint, random, choice, choices
+from random import randint, random, choice
+
+import sys
+import os
+
+try:
+    PATH = sys._MEIPASS  # PyInstaller 
+except AttributeError:
+    PATH = os.path.abspath(".")
 
 class Game:
     def __init__(self):
         self.__level = 0
         self.__previousQuestions = [[], [], []]
         
-        with open("output2.json", "r", encoding="utf8") as file:
+        with open(os.path.join(PATH,"DATA/output2.json"), "r", encoding="utf8") as file:
             self.__questionData = json.load(file)
 
         self.__currentQuestion = self.__newQuestion()
