@@ -6,9 +6,6 @@ from DATA.game import Game
 
 from DATA.audio.soundPlayer import Sound
 
-from DATA.GUI.assets import *
-from DATA.GUI.widget import Button, Toggle
-
 import threading
 
 #--------------------------------------------------------------------------------------------------------------------------------------#
@@ -22,6 +19,9 @@ centerY = screen.get_height()/2
 pg.display.set_caption("WWTBAM")
 clock = pg.Clock()
 FPS = 60
+
+from DATA.GUI.assets import *
+from DATA.GUI.widget import Button, Toggle
 
 #--------------------------------------------------------------------------------------------------------------------------------------#
 # widgets: ----------------------------------------------------------------------------------------------------------------------------#
