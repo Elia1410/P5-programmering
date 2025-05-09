@@ -66,18 +66,18 @@ FONT2 = pg.font.Font(os.path.join(PATH,"DATA/GUI/ARIAL.TTF"), size=14)
 
 # text til milesten: ---------------------------------------------------------------------------------------------------#
 
-levels=[FONT1.render("1   $ 100", True, "orange"),
-        FONT1.render("2   $ 200", True, "orange"),
-        FONT1.render("3   $ 300", True, "orange"),
-        FONT1.render("4   $ 500", True, "orange"),
-        FONT1.render("5   $ 1.000", True, "white"),
-        FONT1.render("6   $ 2.000", True, "orange"),
-        FONT1.render("7   $ 4.000", True, "orange"),
-        FONT1.render("8   $ 8.000", True, "orange"),
-        FONT1.render("9   $ 16.000", True, "orange"),
-        FONT1.render("10  $ 32.000", True, "white"),
-        FONT1.render("11  $ 64.000", True, "orange"),
-        FONT1.render("12  $ 125.000", True, "orange"),
-        FONT1.render("13  $ 250.000", True, "orange"),
-        FONT1.render("14  $ 500.000", True, "orange"),
-        FONT1.render("15  $ 1.000.000", True, "white")]
+levels=[FONT1.render("1   £ 100", True, "orange"),
+        FONT1.render("2   £ 200", True, "orange"),
+        FONT1.render("3   £ 300", True, "orange"),
+        FONT1.render("4   £ 500", True, "orange"),
+        FONT1.render("5   £ 1.000", True, "white"),
+        FONT1.render("6   £ 2.000", True, "orange"),
+        FONT1.render("7   £ 4.000", True, "orange"),
+        FONT1.render("8   £ 8.000", True, "orange"),
+        FONT1.render("9   £ 16.000", True, "orange"),
+        FONT1.render("10  £ 32.000", True, "white"),
+        FONT1.render("11  £ 64.000", True, "orange"),
+        FONT1.render("12  £ 125.000", True, "orange"),
+        FONT1.render("13  £ 250.000", True, "orange"),
+        FONT1.render("14  £ 500.000", True, "orange"),
+        FONT1.render("15  £ 1.000.000", True, "white")]
