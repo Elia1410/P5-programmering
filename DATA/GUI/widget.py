@@ -29,8 +29,8 @@ class Widget:
         Args:
             screen (_pygame.Surface_): Den surface som krydset tegnes på, typisk en window-surface.
         """        
-        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3) # Linje fra top-venstre til bund-højre
-        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3) # Linje fra bund-venstre til top-højre
+        pg.draw.line(screen, "yellow", (self.posX, self.posY), (self.posX + self.width, self.posY + self.height), 3)    # Linje fra top-venstre til bund-højre
+        pg.draw.line(screen, "yellow", (self.posX, self.posY + self.height), (self.posX + self.width, self.posY), 3)    # Linje fra bund-venstre til top-højre
 
 #####################################################################################################################################
 
@@ -114,11 +114,11 @@ class Toggle(Widget): # subklasse widget for toggles
         isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height)) # Tjeker om musen er inden for knappens område på y-aksen
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            if self.hoverImages != None: # Hvis der er et hoverbillede tilhørende knappen, tegnes det på skærmen
+            if self.hoverImages != None: 
                 if self.state == True: 
                     screen.blit(self.hoverImages[0], (self.posX, self.posY)) # Billede til tilstand 1
                 else:
-                    screen.blit(self.hoverImages[1], (self.posX, self.posY)) # Billede til tilstand 1
+                    screen.blit(self.hoverImages[1], (self.posX, self.posY)) # Billede til tilstand 2
             return self.isHover
         
     def checkPressed(self, screen: pg.Surface):
