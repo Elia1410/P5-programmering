@@ -114,7 +114,7 @@ class Toggle(Widget): # subklasse widget for toggles
         isHoverY = pg.mouse.get_pos()[1] in list(range(self.posY, self.posY+self.height)) # Tjeker om musen er inden for knappens område på y-aksen
         if isHoverX == True & isHoverY == True:
             self.isHover = True
-            if self.hoverImages != None: 
+            if self.hoverImages != None: # Hvis der er et hoverbillede tilhørende knappen, tegnes det på skærmen
                 if self.state == True: 
                     screen.blit(self.hoverImages[0], (self.posX, self.posY)) # Billede til tilstand 1
                 else:
